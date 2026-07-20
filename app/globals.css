@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/* ============================================================
+   FJ GENERAL & ENGINEERING SERVICES
+   Brand Theme
+
+   Colour Distribution:
+   🟢 Green    → Brand identity, headings, icons, primary buttons
+   ⚫ Charcoal → Navigation, hero overlay, footer, body text
+   ⚪ White    → Clean UI, cards, backgrounds
+   🟠 Orange   → CTAs ONLY (Get Quote, WhatsApp, Call To Action)
+
+   RULE: Orange must NEVER dominate. Use only where user must click.
+============================================================ */
+
+:root {
+
+  /* ========================================================
+     PRIMARY BRAND — Green
+     Logo · Headings · Icons · Primary buttons · Links
+     ======================================================== */
+
+  --primary:       #5d9f0d;
+  --primary-light: #649c19;
+  --primary-dark:  #39790e;
+
+  /* ========================================================
+     ACCENT — Construction Orange
+     Get Quote · WhatsApp · CTA buttons · Hover states
+     ======================================================== */
+
+  --accent:       #ff5a00;
+  --accent-light: #ff6a1a;
+  --accent-dark:  #e04e00;
+
+  /* ========================================================
+     NEUTRALS
+     ======================================================== */
+
+  --black:      #111111;
+  --black-soft: #1E1E1E;
+  --charcoal:   #1F2937;
+
+  /* ========================================================
+     BACKGROUNDS
+     ======================================================== */
+
+  --background:         #FFFFFF;
+  --background-alt:     #F7F8F7;
+  --background-section: #F4F6F4;
+  --background-card:    #FFFFFF;
+  --background-dark:    #111111;
+
+  /* ========================================================
+     TEXT
+     ======================================================== */
+
+  --text-primary:   #111827;
+  --text-secondary: #4B5563;
+  --text-muted:     #6B7280;
+  --text-light:     #FFFFFF;
+
+  /* ========================================================
+     BORDERS
+     ======================================================== */
+
+  --border:      #E5E7EB;
+  --border-dark: #D1D5DB;
+
+  /* ========================================================
+     STATUS
+     ======================================================== */
+
+  --success: #16A34A;
+  --warning: #F59E0B;
+  --danger:  #DC2626;
+  --info:    #2563EB;
+
+  /* ========================================================
+     SHADOWS
+     ======================================================== */
+
+  --shadow-sm: 0 2px 8px  rgba(0, 0, 0, .05);
+  --shadow:    0 8px 24px rgba(0, 0, 0, .08);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, .15);
+
+  /* ========================================================
+     BORDER RADIUS
+     ======================================================== */
+
+  --radius-sm:   .5rem;
+  --radius:      .75rem;
+  --radius-lg:   1rem;
+  --radius-xl:   1.5rem;
+  --radius-full: 9999px;
+
+  /* ========================================================
+     TRANSITIONS
+     ======================================================== */
+
+  --transition: all .3s ease;
+}
+
+/* ============================================================
+   Tailwind v4 Theme Tokens
+============================================================ */
+
+@theme {
+
+  /* Brand */
+  --color-primary:       var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark:  var(--primary-dark);
+
+  /* Accent */
+  --color-accent:       var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark:  var(--accent-dark);
+
+  /* Backgrounds */
+  --color-background:         var(--background);
+  --color-background-alt:     var(--background-alt);
+  --color-background-section: var(--background-section);
+  --color-background-card:    var(--background-card);
+  --color-background-dark:    var(--background-dark);
+
+  /* Text */
+  --color-text:           var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted:     var(--text-muted);
+  --color-text-light:     var(--text-light);
+
+  /* Neutrals */
+  --color-black:      var(--black);
+  --color-black-soft: var(--black-soft);
+  --color-charcoal:   var(--charcoal);
+
+  /* Borders */
+  --color-border:      var(--border);
+  --color-border-dark: var(--border-dark);
+
+  /* Status */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger:  var(--danger);
+  --color-info:    var(--info);
+}

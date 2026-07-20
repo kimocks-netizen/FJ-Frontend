@@ -1,0 +1,29 @@
+import type { ServiceItem } from '../types/services';
+import type { GalleryItem } from '../types/gallery';
+import type { Quote } from '../types';
+
+export const mockServices: ServiceItem[] = [
+  { id: '1', title: 'Tree Felling & Rubble Removal', description: 'Safe removal of hazardous trees, site clearing and responsible rubble disposal. Waste disposal certificates provided.', image_url: '/tree-cutting.png', details: 'We handle trees of all sizes including dangerous overhanging trees, storm-damaged trees and full site clearing. All rubble is responsibly disposed of with certificates available.', display_order: 1, is_active: true, created_at: '', updated_at: '' },
+  { id: '2', title: 'Stump Removal & Grinding', description: 'Complete stump removal for landscaping and construction. Ground flush, no mess left behind.', image_url: '/stumb-removal.png', details: 'Using professional stump grinders we remove stumps to below ground level, leaving your site clean and ready for landscaping or construction.', display_order: 2, is_active: true, created_at: '', updated_at: '' },
+  { id: '3', title: 'Tar Resurfacing', description: 'Driveways, parking lots and private roads using quality hot asphalt.', image_url: '/tar-resurfacing.png', details: 'Full tar resurfacing services including crack sealing, pothole patching and complete hot asphalt resurfacing for driveways, parking lots and private roads.', display_order: 3, is_active: true, created_at: '', updated_at: '' },
+  { id: '4', title: 'Road Line Marking', description: 'Professional thermoplastic and reflective paint marking. SABS compliant.', image_url: '/line-marking.png', details: 'Road, warehouse and parking bay line marking using thermoplastic and reflective paint. All work is SABS compliant.', display_order: 4, is_active: true, created_at: '', updated_at: '' },
+  { id: '5', title: 'Tennis & Sports Court Marking', description: 'Tennis, netball and basketball court markings. Durable, weather-resistant paint.', image_url: '/tenis-court-making.png', details: 'Accurate line marking for tennis, netball and basketball courts using durable, weather-resistant paint that lasts.', display_order: 5, is_active: true, created_at: '', updated_at: '' },
+  { id: '6', title: 'Pothole Filling & Speed Hump Marking', description: 'Permanent cold mix and hot asphalt pothole repairs plus speed hump construction.', image_url: '/pothole-repair.png', details: 'Permanent pothole repairs using cold mix and hot asphalt. New speed hump construction with yellow and black reflective marking.', display_order: 6, is_active: true, created_at: '', updated_at: '' },
+  { id: '7', title: 'Wendy Houses', description: 'New and refurbished timber Wendy houses. Delivery and installation included.', image_url: '/wendy-houses.png', details: 'Supply, refurbishment and installation of timber Wendy houses. Perfect for offices, guard houses and storage. Delivery and installation included.', display_order: 7, is_active: true, created_at: '', updated_at: '' },
+  { id: '8', title: 'Jacketed Pots & Boiler Making', description: 'Custom SS304 food-grade fabrication from 50L to 1000L.', image_url: '/oil-pot.png', details: 'Custom stainless steel SS304 jacketed cooking pots from 50L to 1000L. Food-grade TIG welds, PID temperature control and oil heating systems.', display_order: 8, is_active: true, created_at: '', updated_at: '' },
+];
+
+export const mockGallery: GalleryItem[] = [
+  { id: '1', title: 'Tar Resurfacing — Alberton Warehouse', description: 'Full parking lot resurfacing for a commercial warehouse in Alberton.', cover_image_url: '/tar-resurfacing.png', display_order: 1, is_active: true, created_at: '', updated_at: '', images: [] },
+  { id: '2', title: 'Tree Felling — Germiston Residential', description: 'Removal of three large dangerous trees from a residential property.', cover_image_url: '/tree-cutting.png', display_order: 2, is_active: true, created_at: '', updated_at: '', images: [] },
+  { id: '3', title: 'Road Line Marking — Ekurhuleni Industrial Park', description: 'Parking bay and road marking for a large industrial park.', cover_image_url: '/line-marking.png', display_order: 3, is_active: true, created_at: '', updated_at: '', images: [] },
+  { id: '4', title: 'Jacketed Pot — 500L SS304 Build', description: 'Custom 500L food-grade jacketed pot fabrication for a catering client.', cover_image_url: '/oil-pot.png', display_order: 4, is_active: true, created_at: '', updated_at: '', images: [] },
+  { id: '5', title: 'Sports Court Marking — Johannesburg School', description: 'Tennis and netball court marking for a Johannesburg school.', cover_image_url: '/tenis-court-making.png', display_order: 5, is_active: true, created_at: '', updated_at: '', images: [] },
+  { id: '6', title: 'Wendy House Installation — Pretoria', description: 'New timber Wendy house installed as a site office in Pretoria.', cover_image_url: '/wendy-houses.png', display_order: 6, is_active: true, created_at: '', updated_at: '', images: [] },
+];
+
+export const mockQuotes: Quote[] = [
+  { id: '1', name: 'John Dlamini', phone: '+27821234567', email: 'john@email.com', service_required: 'Tree Felling & Rubble Removal', location: 'Alberton', message: 'I have 2 large trees that need to come down urgently.', images: [], status: 'Pending', created_at: new Date().toISOString() },
+  { id: '2', name: 'Sarah Nkosi', phone: '+27831234567', email: 'sarah@email.com', service_required: 'Tar Resurfacing', location: 'Germiston', message: 'Need driveway resurfaced, about 200sqm.', images: [], status: 'Contacted', created_at: new Date().toISOString() },
+  { id: '3', name: 'Mike van der Berg', phone: '+27841234567', email: 'mike@email.com', service_required: 'Road Line Marking', location: 'Pretoria', message: 'Warehouse parking bay marking needed.', images: [], status: 'Completed', created_at: new Date().toISOString() },
+];
