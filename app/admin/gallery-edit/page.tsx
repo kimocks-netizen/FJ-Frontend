@@ -34,7 +34,7 @@ export default function GalleryEdit() {
     if (!token) { router.push('/admin'); return; }
     axios.get(API_ENDPOINTS.ADMIN_GALLERY, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => { if (res.data.status === 'success') setItems(res.data.data || []); })
-      .catch(() => router.push('/admin'))
+      .catch(err => { console.error('Gallery fetch error:', err); })
       .finally(() => setIsLoading(false));
   }, [router]);
 

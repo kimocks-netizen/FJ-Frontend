@@ -32,7 +32,7 @@ export default function ServicesEdit() {
     if (!token) { router.push('/admin'); return; }
     axios.get(API_ENDPOINTS.ADMIN_SERVICES, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => { if (res.data.status === 'success') setServices(res.data.data || []); })
-      .catch(() => router.push('/admin'))
+      .catch(err => { console.error('Services fetch error:', err); })
       .finally(() => setIsLoading(false));
   }, [router]);
 

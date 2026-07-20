@@ -36,7 +36,7 @@ export default function AdminQuotes() {
     if (!token) { router.push('/admin'); return; }
     axios.get(API_ENDPOINTS.ADMIN_QUOTES, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => { if (res.data.status === 'success') setQuotes(res.data.data.map((q: Quote) => ({ ...q, status: (q.status.charAt(0).toUpperCase() + q.status.slice(1)) as QuoteStatus }))); })
-      .catch(() => router.push('/admin'));
+      .catch(err => { console.error('Quotes fetch error:', err); });
   }, [router]);
 
   const handleStatusChange = async (id: string, status: QuoteStatus) => {
