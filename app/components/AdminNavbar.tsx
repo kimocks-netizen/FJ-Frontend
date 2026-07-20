@@ -45,9 +45,9 @@ const AdminNavbar = () => {
       <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Link href="/admin/dashboard" className="flex items-center space-x-2">
-              <span className="text-primary font-black text-2xl tracking-tight">FJ</span>
-              <span className="text-charcoal font-semibold text-sm">ADMIN</span>
+            <Link href="/admin/dashboard" className="flex items-center gap-2">
+              <img src="/big-logo.png" alt="FJ Logo" className="h-8 w-auto" />
+              <span className="text-charcoal font-semibold text-sm tracking-widest">ADMIN</span>
             </Link>
 
             <div className="hidden md:flex items-center space-x-1">
