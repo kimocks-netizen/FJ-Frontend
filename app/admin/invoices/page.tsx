@@ -49,7 +49,9 @@ export default function InvoiceManagement() {
   }, [router]);
 
   useEffect(() => {
-    const handler = (e: MouseEvent) => { if (dropdownOpen && !(e.target as Element).closest('.dropdown-container')) setDropdownOpen(null); };
+    const handler = (e: MouseEvent) => {
+      if (dropdownOpen && !(e.target as Element).closest('.dropdown-container') && !(e.target as Element).closest('.dropdown-portal')) setDropdownOpen(null);
+    };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [dropdownOpen]);
@@ -163,7 +165,7 @@ export default function InvoiceManagement() {
 
       {/* Fixed dropdown portal — never clipped by overflow-hidden */}
       {dropdownOpen && (() => { const inv = invoices.find(i => i.id === dropdownOpen); if (!inv) return null; return (
-        <div className="fixed z-[9999] w-48 bg-white rounded-[7px] shadow-xl border border-border py-1" style={{ top: dropdownPos.top, right: dropdownPos.right }}>
+        <div className="dropdown-portal fixed z-[9999] w-48 bg-white rounded-[7px] shadow-xl border border-border py-1" style={{ top: dropdownPos.top, right: dropdownPos.right }}>
           {[
             { icon: <FaEye />, label: 'View PDF', action: () => { setSelectedInvoice(inv); setDropdownOpen(null); setTimeout(() => setIsPDFOpen(true), 0); } },
             { icon: <FaEdit />, label: 'Edit', action: () => { setEditingInvoice(inv); setIsEditModalOpen(true); setDropdownOpen(null); } },
