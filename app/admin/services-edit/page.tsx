@@ -1,14 +1,40 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import AdminNavbar from '../../components/AdminNavbar';
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
-import { supabase } from '../../lib/supabaseClient';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
 import type { ServiceItem, ServiceFormData } from '../../types/services';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner, FaCloudUploadAlt } from 'react-icons/fa';
+
+const checkLandscape = (file: File): Promise<boolean> =>
+  new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(img.src); resolve(img.naturalWidth >= img.naturalHeight); };
+    img.src = URL.createObjectURL(file);
+  });
+
+const DropZone: React.FC<{ onFile: (f: File) => void; loading?: boolean; label: string }> = ({ onFile, loading, label }) => {
+  const [dragging, setDragging] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const handle = (f: File) => { if (f && f.type.startsWith('image/')) onFile(f); };
+  return (
+    <div
+      onClick={() => inputRef.current?.click()}
+      onDragOver={e => { e.preventDefault(); setDragging(true); }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) handle(f); }}
+      className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-[7px] p-6 cursor-pointer transition-colors ${dragging ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-background-section'}`}
+    >
+      {loading ? <FaSpinner className="animate-spin text-primary text-xl" /> : <FaCloudUploadAlt className="text-2xl text-text-muted" />}
+      <p className="text-sm text-text-muted">{loading ? 'Uploading...' : label}</p>
+      <p className="text-xs text-text-muted">Drag & drop or click to browse</p>
+      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files?.[0]) handle(e.target.files[0]); e.target.value = ''; }} />
+    </div>
+  );
+};
 
 const MAX_SERVICES = 12;
 
@@ -23,9 +49,23 @@ export default function ServicesEdit() {
   const [togglingService, setTogglingService] = useState<string | null>(null);
   const [deleteService, setDeleteService] = useState<ServiceItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [landscapeWarning, setLandscapeWarning] = useState<{ file: File; onConfirm: (f: File) => void } | null>(null);
   const router = useRouter();
 
   const getToken = () => getAdminToken();
+
+  const withLandscapeCheck = (file: File, onConfirm: (f: File) => void) =>
+    checkLandscape(file).then(ok => ok ? onConfirm(file) : setLandscapeWarning({ file, onConfirm }));
+
+  const uploadViaBackend = async (file: File, folder: string, bucket: string): Promise<string> => {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('folder', folder);
+    fd.append('bucket', bucket);
+    const res = await axios.post(API_ENDPOINTS.ADMIN_UPLOAD, fd, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (res.data.status !== 'success') throw new Error(res.data.message);
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL || 'https://fj-backend-mu.vercel.app'}${res.data.url}`;
+  };
 
   useEffect(() => {
     const token = getToken();
@@ -39,11 +79,7 @@ export default function ServicesEdit() {
   const handleImageUpload = async (file: File) => {
     setUploadingImage(true);
     try {
-      const ext = file.name.split('.').pop();
-      const path = `services/${Date.now()}-${Math.random()}.${ext}`;
-      const { error } = await supabase.storage.from('fj-images').upload(path, file);
-      if (error) throw error;
-      const url = supabase.storage.from('fj-images').getPublicUrl(path).data.publicUrl;
+      const url = await uploadViaBackend(file, 'services', 'fj-images');
       setFormData(p => ({ ...p, image_url: url }));
     } catch (e) { console.error(e); alert('Failed to upload image'); }
     finally { setUploadingImage(false); }
@@ -154,10 +190,7 @@ export default function ServicesEdit() {
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">Service Image</label>
                   {formData.image_url && <img src={formData.image_url} alt="Service" className="w-full h-32 object-cover rounded-[7px] mb-2" />}
-                  <div className="flex items-center gap-2">
-                    <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleImageUpload(e.target.files[0])} className="flex-1 text-sm" />
-                    {uploadingImage && <FaSpinner className="animate-spin text-primary" />}
-                  </div>
+                  <DropZone label="Upload service image" loading={uploadingImage} onFile={f => withLandscapeCheck(f, handleImageUpload)} />
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 rounded-[7px] hover:bg-gray-200 transition-colors">Cancel</button>
@@ -172,6 +205,21 @@ export default function ServicesEdit() {
       )}
 
       {deleteService && <DeleteConfirmationModal isOpen={!!deleteService} onClose={() => setDeleteService(null)} onConfirm={handleDeleteConfirm} title="Delete Service" message="Are you sure you want to delete this service?" itemName={deleteService.title} isLoading={isDeleting} />}
+
+      {landscapeWarning && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-[7px] max-w-md w-full shadow-xl p-6">
+            <h3 className="text-lg font-bold text-text mb-2">Portrait Image Detected</h3>
+            <p className="text-sm text-text-secondary mb-1">This image appears to be in portrait orientation (taller than it is wide).</p>
+            <p className="text-sm text-text-secondary mb-4">Landscape images are strongly recommended — portrait images may appear cropped, distorted, or poorly framed within the service card layout, resulting in a suboptimal viewing experience for visitors.</p>
+            <p className="text-sm font-medium text-text mb-4">Would you like to continue with this image anyway, or choose a different one?</p>
+            <div className="flex gap-3 justify-end">
+              <button onClick={() => setLandscapeWarning(null)} className="px-4 py-2 bg-primary text-white rounded-[7px] text-sm font-semibold hover:bg-primary-dark transition-colors">Choose Again</button>
+              <button onClick={() => { landscapeWarning.onConfirm(landscapeWarning.file); setLandscapeWarning(null); }} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-[7px] text-sm hover:bg-gray-200 transition-colors">Continue Anyway</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import AdminNavbar from '../../components/AdminNavbar';
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
-import { supabase } from '../../lib/supabaseClient';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
 import type { GalleryItem, GalleryFormData } from '../../types/gallery';
@@ -67,11 +66,13 @@ export default function GalleryEdit() {
   }, [router]);
 
   const uploadImage = async (file: File, bucket: string, folder: string): Promise<string> => {
-    const ext = file.name.split('.').pop();
-    const path = `${folder}/${Date.now()}-${Math.random()}.${ext}`;
-    const { error } = await supabase.storage.from(bucket).upload(path, file);
-    if (error) throw error;
-    return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('folder', folder);
+    fd.append('bucket', bucket);
+    const res = await axios.post(API_ENDPOINTS.ADMIN_UPLOAD, fd, { headers: { Authorization: `Bearer ${getToken()}` } });
+    if (res.data.status !== 'success') throw new Error(res.data.message);
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL || 'https://fj-backend-mu.vercel.app'}${res.data.url}`;
   };
 
   const withLandscapeCheck = (file: File, onConfirm: (f: File) => void) =>

@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
   PUBLIC_SERVICES: `${API_BASE_URL}/api/services`,
 
   // Admin
+  ADMIN_UPLOAD:   `${API_BASE_URL}/api/admin/upload`,
   ADMIN_LOGIN:    `${API_BASE_URL}/api/admin/login`,
   ADMIN_QUOTES:   `${API_BASE_URL}/api/admin/quotes`,
   ADMIN_INVOICES: `${API_BASE_URL}/api/admin/invoices`,
