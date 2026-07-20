@@ -58,38 +58,40 @@ export default function Home() {
 
         {/* Hero */}
         <section className="relative text-white">
-          <div className="h-[480px] relative flex items-center overflow-hidden">
+          <div className="min-h-[480px] relative flex flex-col justify-between overflow-hidden">
             <img src="/hero_image.png" alt="FJ General & Engineering Services" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/50" />
-            <div className="relative z-10 w-full max-w-[1120px] mx-auto px-6">
+
+            {/* Hero content */}
+            <div className="relative z-10 w-full max-w-[1120px] mx-auto px-6 pt-12 pb-20 md:py-16">
               <div className="ml-0 md:ml-[8%]" style={{textShadow:'0 2px 7px #000'}}>
-                <h1 className="text-5xl md:text-6xl font-black uppercase leading-[0.98] mb-3">
+                <h1 className="text-4xl md:text-6xl font-black uppercase leading-[0.98] mb-3">
                   <span className="text-primary">FJ General &</span><br />
                   <span className="text-accent">Engineering</span><br />
                   <span className="text-white">Services</span>
                 </h1>
-                <p className="text-white font-semibold text-base leading-snug mb-5">
+                <p className="text-white font-semibold text-sm md:text-base leading-snug mb-5">
                   Your One-Stop Team for Tree Felling, Road Works, Tar &amp; Custom Fabrication in Gauteng
                 </p>
-                <div className="flex flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <a href="https://wa.me/27000000000?text=Hello%20FJ%2C%20I%20need%20a%20quote" target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
+                    className="flex items-center justify-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
                     <FaWhatsapp className="w-4 h-4" /> Get Quote on WhatsApp
                   </a>
                   <a href="tel:+27000000000"
-                    className="flex items-center gap-2 bg-[#080808] text-white border border-[#649c19] hover:bg-[#649c19] px-4 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-all duration-200">
+                    className="flex items-center justify-center gap-2 bg-[#080808] text-white border border-[#649c19] hover:bg-[#649c19] px-4 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-all duration-200">
                     <Phone className="w-4 h-4" /> Call Now
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* Trust Bar — absolute bottom, overlays hero image */}
-            <div className="absolute bottom-0 left-0 right-0 z-10 backdrop-blur-sm" style={{background:'rgba(0,0,0,0.30)'}}>
+            {/* Trust Bar */}
+            <div className="relative z-10 backdrop-blur-sm" style={{background:'rgba(0,0,0,0.30)'}}>
               <div className="max-w-[1120px] mx-auto">
                 <div className="flex flex-wrap md:flex-nowrap divide-y md:divide-y-0 md:divide-x divide-white/10">
                   {trustItems.map(item => (
-                    <div key={item.label} className="flex items-center justify-center gap-1.5 py-2.5 px-4 text-[11px] font-semibold uppercase tracking-wide flex-1 text-white/80">
+                    <div key={item.label} className="flex items-center justify-center gap-1.5 py-2.5 px-4 text-[11px] font-semibold uppercase tracking-wide flex-1 text-white/80 min-w-[50%] md:min-w-0">
                       <span className="text-white/50">{item.icon}</span>
                       {item.label}
                     </div>

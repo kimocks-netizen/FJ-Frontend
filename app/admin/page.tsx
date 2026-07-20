@@ -60,30 +60,30 @@ export default function AdminLogin() {
       </nav>
 
       <div className="flex-1 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-[7px] shadow-lg overflow-hidden border border-border">
-        <div className="bg-primary px-6 py-6 text-center flex flex-col items-center gap-2">
-          <img src="/big-logo.png" alt="FJ Logo" className="h-14 w-auto" />
-          <p className="text-white/80 text-sm font-semibold uppercase tracking-widest">Admin Portal</p>
-        </div>
-        <form onSubmit={handleLogin} className="p-8 space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-text mb-1">Username</label>
-            <input type="text" value={email} onChange={e => setEmail(e.target.value)} className={inputClass} placeholder="admin" required />
+        <div className="w-full max-w-md bg-white rounded-[7px] shadow-lg overflow-hidden border border-border">
+          <div className="bg-primary px-6 py-6 text-center flex flex-col items-center gap-2">
+            <img src="/big-logo.png" alt="FJ Logo" className="h-14 w-auto" />
+            <p className="text-white/80 text-sm font-semibold uppercase tracking-widest">Admin Portal</p>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-text mb-1">Password</label>
-            <div className="relative">
-              <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} className={`${inputClass} pr-11`} required />
-              <button type="button" onClick={() => setShowPassword(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
+          <form onSubmit={handleLogin} className="p-6 sm:p-8 space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-text mb-1">Username</label>
+              <input type="text" value={email} onChange={e => setEmail(e.target.value)} className={inputClass} placeholder="admin" required />
             </div>
-          </div>
-          <button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent-dark text-white py-3 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200 disabled:opacity-60">
-            {isLoading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-      </div>
+            <div>
+              <label className="block text-sm font-medium text-text mb-1">Password</label>
+              <div className="relative">
+                <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} className={`${inputClass} pr-11`} required />
+                <button type="button" onClick={() => setShowPassword(p => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <button type="submit" disabled={isLoading} className="w-full bg-accent hover:bg-accent-dark text-white py-3 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200 disabled:opacity-60">
+              {isLoading ? 'Logging in...' : 'Login'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -19,12 +19,19 @@ const Footer = () => (
             <div className="text-white">Services</div>
           </div>
         </div>
-        <p className="text-white/50 text-xs leading-relaxed mb-5">
+        <p className="text-white/50 text-xs leading-relaxed mb-2">
           Trusted civil, landscaping and engineering solutions across Gauteng. CIDB Registered · OHS Compliant.
+        </p>
+        <p className="text-white/40 text-[11px] leading-relaxed mb-2">
+          Registered as FJ Engineering<br />
+          Reg No: 2026/265021/07
+        </p>
+        <p className="text-white/40 text-[11px] mb-5">
+          23 Meyer Street, Germiston, 1400
         </p>
         <div className="flex gap-2">
           {[
-            { href: 'https://wa.me/27000000000', icon: <FaWhatsapp className="w-4 h-4" /> },
+            { href: 'https://wa.me/27737869066', icon: <FaWhatsapp className="w-4 h-4" /> },
             { href: 'https://facebook.com',      icon: <FaFacebookF className="w-3.5 h-3.5" /> },
             { href: 'https://instagram.com',     icon: <FaInstagram className="w-4 h-4" /> },
           ].map(({ href, icon }) => (
@@ -77,8 +84,8 @@ const Footer = () => (
     <div className="border-t border-white/10">
       <div className="max-w-[1120px] mx-auto px-6 py-3 flex flex-wrap items-center gap-x-6 gap-y-2">
         <span className="text-[11px] font-bold uppercase tracking-widest text-primary">Contact</span>
-        <a href="tel:+27000000000" className="flex items-center gap-1.5 text-white/60 hover:text-white text-xs transition-colors duration-150">
-          <Phone className="w-3 h-3 text-accent" /> +27 00 000 0000
+        <a href="tel:+27737869066" className="flex items-center gap-1.5 text-white/60 hover:text-white text-xs transition-colors duration-150">
+          <Phone className="w-3 h-3 text-accent" /> +27 73 786 9066
         </a>
         <a href="mailto:info@fjservices.co.za" className="flex items-center gap-1.5 text-white/60 hover:text-white text-xs transition-colors duration-150">
           <Mail className="w-3 h-3 text-accent" /> info@fjservices.co.za
