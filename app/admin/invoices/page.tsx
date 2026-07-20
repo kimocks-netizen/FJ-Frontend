@@ -45,7 +45,7 @@ export default function InvoiceManagement() {
     if (!token) { router.push('/admin'); return; }
     axios.get(API_ENDPOINTS.ADMIN_INVOICES, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setInvoices(res.data.data || []))
-      .catch(() => router.push('/admin'));
+      .catch(console.error);
   }, [router]);
 
   useEffect(() => {
@@ -165,13 +165,7 @@ export default function InvoiceManagement() {
       {dropdownOpen && (() => { const inv = invoices.find(i => i.id === dropdownOpen); if (!inv) return null; return (
         <div className="fixed z-[9999] w-48 bg-white rounded-[7px] shadow-xl border border-border py-1" style={{ top: dropdownPos.top, right: dropdownPos.right }}>
           {[
-            { icon: <FaEye />, label: 'View PDF', action: async () => {
-                setDropdownOpen(null);
-                try {
-                  const res = await axios.get(API_ENDPOINTS.getInvoiceEndpoint(inv.id), { headers: { Authorization: `Bearer ${getToken()}` } });
-                  if (res.data.status === 'success') { setSelectedInvoice(res.data.data); setIsPDFOpen(true); }
-                } catch { setSelectedInvoice(inv); setIsPDFOpen(true); }
-              }},
+            { icon: <FaEye />, label: 'View PDF', action: () => { setSelectedInvoice(inv); setDropdownOpen(null); setTimeout(() => setIsPDFOpen(true), 0); } },
             { icon: <FaEdit />, label: 'Edit', action: () => { setEditingInvoice(inv); setIsEditModalOpen(true); setDropdownOpen(null); } },
             { icon: <FaExchangeAlt />, label: `Convert to ${inv.document_type === 'invoice' ? 'Quote' : 'Invoice'}`, action: () => { setConversionItem({ id: inv.id, currentType: inv.document_type, documentNumber: inv.invoice_number }); setIsConversionModalOpen(true); setDropdownOpen(null); } },
             { icon: <FaWhatsapp />, label: 'WhatsApp', action: () => { window.open(`https://wa.me/${inv.customer_phone}`, '_blank'); setDropdownOpen(null); } },
