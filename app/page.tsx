@@ -74,11 +74,11 @@ export default function Home() {
                   Your One-Stop Team for Tree Felling, Road Works, Tar &amp; Custom Fabrication in Gauteng
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="https://wa.me/27000000000?text=Hello%20FJ%2C%20I%20need%20a%20quote" target="_blank" rel="noopener noreferrer"
+                  <a href="https://wa.me/27737869066?text=Hello%20FJ%2C%20I%20need%20a%20quote" target="_blank" rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
                     <FaWhatsapp className="w-4 h-4" /> Get Quote on WhatsApp
                   </a>
-                  <a href="tel:+27000000000"
+                  <a href="tel:+27737869066"
                     className="flex items-center justify-center gap-2 bg-[#080808] text-white border border-[#649c19] hover:bg-[#649c19] px-4 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-all duration-200">
                     <Phone className="w-4 h-4" /> Call Now
                   </a>
@@ -182,7 +182,7 @@ export default function Home() {
               <Link href="/contact" className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
                 Send Quote Request
               </Link>
-              <a href="https://wa.me/27000000000" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#080808] border border-[#649c19] hover:bg-[#649c19] text-white px-5 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-all duration-200">
+              <a href="https://wa.me/27737869066" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#080808] border border-[#649c19] hover:bg-[#649c19] text-white px-5 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-all duration-200">
                 <FaWhatsapp className="w-4 h-4" /> Chat on WhatsApp
               </a>
             </div>

@@ -74,7 +74,7 @@ export default function Services() {
               <Link href="/contact" className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
                 Send Quote Request
               </Link>
-              <a href="https://wa.me/27000000000" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#080808] border border-[#649c19] hover:bg-[#649c19] text-white px-5 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-all duration-200">
+              <a href="https://wa.me/27737869066" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-[#080808] border border-[#649c19] hover:bg-[#649c19] text-white px-5 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-all duration-200">
                 <FaWhatsapp className="w-4 h-4" /> Chat on WhatsApp
               </a>
             </div>

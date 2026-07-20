@@ -4,8 +4,8 @@ import QuoteForm from '../components/QuoteForm';
 import { FaWhatsapp, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
 const contactDetails = [
-  { icon: <FaPhoneAlt className="text-accent" />, label: 'Phone', value: '+27 00 000 0000', href: 'tel:+27000000000' },
-  { icon: <FaWhatsapp className="text-accent" />, label: 'WhatsApp', value: '+27 00 000 0000', href: 'https://wa.me/27000000000' },
+  { icon: <FaPhoneAlt className="text-accent" />, label: 'Phone', value: '+27 73 786 9066', href: 'tel:+27737869066' },
+  { icon: <FaWhatsapp className="text-accent" />, label: 'WhatsApp', value: '+27 73 786 9066', href: 'https://wa.me/27737869066' },
   { icon: <FaEnvelope className="text-accent" />, label: 'Email', value: 'info@fjengineering.co.za', href: 'mailto:info@fjengineering.co.za' },
   { icon: <FaMapMarkerAlt className="text-accent" />, label: 'Service Area', value: 'JHB, Alberton, Germiston, Ekurhuleni, Pretoria', href: undefined },
 ];
@@ -52,7 +52,7 @@ export default function Contact() {
                 </div>
               </div>
 
-              <a href="https://wa.me/27000000000?text=Hello%20FJ%2C%20I%20need%20a%20quote" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
+              <a href="https://wa.me/27737869066?text=Hello%20FJ%2C%20I%20need%20a%20quote" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
                 <FaWhatsapp size={22} /> Chat on WhatsApp
               </a>
             </div>
