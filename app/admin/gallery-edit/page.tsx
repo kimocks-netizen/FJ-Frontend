@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import AdminNavbar from '../../components/AdminNavbar';
@@ -8,7 +8,34 @@ import { supabase } from '../../lib/supabaseClient';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
 import type { GalleryItem, GalleryFormData } from '../../types/gallery';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner, FaCloudUploadAlt } from 'react-icons/fa';
+
+const checkLandscape = (file: File): Promise<boolean> =>
+  new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(img.src); resolve(img.naturalWidth >= img.naturalHeight); };
+    img.src = URL.createObjectURL(file);
+  });
+
+const DropZone: React.FC<{ onFile: (f: File) => void; loading?: boolean; label: string }> = ({ onFile, loading, label }) => {
+  const [dragging, setDragging] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const handle = (f: File) => { if (f && f.type.startsWith('image/')) onFile(f); };
+  return (
+    <div
+      onClick={() => inputRef.current?.click()}
+      onDragOver={e => { e.preventDefault(); setDragging(true); }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={e => { e.preventDefault(); setDragging(false); const f = e.dataTransfer.files[0]; if (f) handle(f); }}
+      className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-[7px] p-6 cursor-pointer transition-colors ${dragging ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50 hover:bg-background-section'}`}
+    >
+      {loading ? <FaSpinner className="animate-spin text-primary text-xl" /> : <FaCloudUploadAlt className="text-2xl text-text-muted" />}
+      <p className="text-sm text-text-muted">{loading ? 'Uploading...' : label}</p>
+      <p className="text-xs text-text-muted">Drag & drop or click to browse</p>
+      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files?.[0]) handle(e.target.files[0]); e.target.value = ''; }} />
+    </div>
+  );
+};
 
 const MAX_ITEMS = 24;
 
@@ -25,6 +52,7 @@ export default function GalleryEdit() {
   const [togglingItem, setTogglingItem] = useState<string | null>(null);
   const [deleteItem, setDeleteItem] = useState<GalleryItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [landscapeWarning, setLandscapeWarning] = useState<{ file: File; onConfirm: (f: File) => void } | null>(null);
   const router = useRouter();
 
   const getToken = () => getAdminToken();
@@ -45,6 +73,9 @@ export default function GalleryEdit() {
     if (error) throw error;
     return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
   };
+
+  const withLandscapeCheck = (file: File, onConfirm: (f: File) => void) =>
+    checkLandscape(file).then(ok => ok ? onConfirm(file) : setLandscapeWarning({ file, onConfirm }));
 
   const handleCoverUpload = async (file: File) => {
     setUploadingCover(true);
@@ -162,10 +193,7 @@ export default function GalleryEdit() {
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">Cover Image</label>
                   {formData.cover_image_url && <img src={formData.cover_image_url} alt="Cover" className="w-full h-32 object-cover rounded-[7px] mb-2" />}
-                  <div className="flex items-center gap-2">
-                    <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleCoverUpload(e.target.files[0])} className="flex-1 text-sm" />
-                    {uploadingCover && <FaSpinner className="animate-spin text-primary" />}
-                  </div>
+                  <DropZone label="Upload cover image" loading={uploadingCover} onFile={f => withLandscapeCheck(f, handleCoverUpload)} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">Additional Images</label>
@@ -179,11 +207,8 @@ export default function GalleryEdit() {
                       ))}
                     </div>
                   )}
-                  <div className="flex items-center gap-2">
-                    <input type="file" accept="image/*" onChange={e => e.target.files?.[0] && handleExtraUpload(e.target.files[0])} className="flex-1 text-sm" />
-                    {uploadingExtra && <FaSpinner className="animate-spin text-primary" />}
-                  </div>
-                  <p className="text-xs text-text-muted mt-1">Upload one at a time. Click the image to remove.</p>
+                  <DropZone label="Upload additional image" loading={uploadingExtra} onFile={f => withLandscapeCheck(f, handleExtraUpload)} />
+                  <p className="text-xs text-text-muted mt-1">Upload one at a time. Hover an image and click &times; to remove.</p>
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 rounded-[7px] hover:bg-gray-200 transition-colors">Cancel</button>
@@ -198,6 +223,21 @@ export default function GalleryEdit() {
       )}
 
       {deleteItem && <DeleteConfirmationModal isOpen={!!deleteItem} onClose={() => setDeleteItem(null)} onConfirm={handleDeleteConfirm} title="Delete Gallery Item" message="Are you sure you want to delete this gallery item?" itemName={deleteItem.title} isLoading={isDeleting} />}
+
+      {landscapeWarning && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60] p-4">
+          <div className="bg-white rounded-[7px] max-w-md w-full shadow-xl p-6">
+            <h3 className="text-lg font-bold text-text mb-2">Portrait Image Detected</h3>
+            <p className="text-sm text-text-secondary mb-1">This image appears to be in portrait orientation (taller than it is wide).</p>
+            <p className="text-sm text-text-secondary mb-4">Landscape images are strongly recommended — portrait images may appear cropped, distorted, or poorly framed within the gallery layout, resulting in a suboptimal viewing experience for visitors.</p>
+            <p className="text-sm font-medium text-text mb-4">Would you like to continue with this image anyway, or choose a different one?</p>
+            <div className="flex gap-3 justify-end">
+              <button onClick={() => setLandscapeWarning(null)} className="px-4 py-2 bg-primary text-white rounded-[7px] text-sm font-semibold hover:bg-primary-dark transition-colors">Choose Again</button>
+              <button onClick={() => { landscapeWarning.onConfirm(landscapeWarning.file); setLandscapeWarning(null); }} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-[7px] text-sm hover:bg-gray-200 transition-colors">Continue Anyway</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
