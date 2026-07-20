@@ -31,14 +31,14 @@ const NewInvoiceModal: React.FC<Props> = ({ quote, isOpen, onClose, onDocumentCr
   });
   const [repairItems, setRepairItems] = useState(() => {
     if (editInvoice?.repair_items?.length) return editInvoice.repair_items;
-    return [{ repair_type: '', description: '', amount: '' }, { repair_type: 'Labour', description: 'Labour', amount: '' }];
+    return [{ repair_type: '', description: '', amount: '' }, { repair_type: 'Labour', description: 'Labour charge', amount: '' }];
   });
 
   useEffect(() => {
     if (editInvoice && isEditing) {
       setDocumentType(editInvoice.document_type);
       setFormData({ customer_name: editInvoice.customer_name, customer_phone: editInvoice.customer_phone, service_type: editInvoice.service_type, description: editInvoice.description || '', invoice_date: editInvoice.invoice_date });
-      setRepairItems(editInvoice.repair_items?.length ? editInvoice.repair_items : [{ repair_type: '', description: '', amount: '' }, { repair_type: 'Labour', description: 'Labour', amount: '' }]);
+      setRepairItems(editInvoice.repair_items?.length ? editInvoice.repair_items : [{ repair_type: '', description: '', amount: '' }, { repair_type: 'Labour', description: 'Labour charge', amount: '' }]);
     }
   }, [editInvoice, isEditing]);
 
@@ -98,35 +98,39 @@ const NewInvoiceModal: React.FC<Props> = ({ quote, isOpen, onClose, onDocumentCr
                 <label className="block text-sm font-medium text-text">Line Items *</label>
                 <button type="button" onClick={() => setRepairItems(p => { const n = [...p]; n.splice(n.length - 1, 0, { repair_type: '', description: '', amount: '' }); return n; })} className="text-primary text-sm hover:text-primary-dark">+ Add Item</button>
               </div>
-              {repairItems.map((item, i) => (
+              {repairItems.map((item, i) => {
+                const isLabour = i === repairItems.length - 1;
+                return (
                 <div key={i} className="border border-border rounded-[7px] p-4 mb-3">
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <label className="text-xs text-text-muted mb-1 block">Type</label>
-                      <select value={item.repair_type} onChange={e => { const n = [...repairItems]; n[i] = { ...n[i], repair_type: e.target.value }; setRepairItems(n); }} disabled={i === repairItems.length - 1} className="w-full border border-border rounded-[7px] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:bg-gray-50">
-                        <option value="">Select...</option>
-                        {FJ_SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
-                        <option value="Labour">Labour</option>
-                        <option value="Materials">Materials</option>
-                        <option value="Other">Other</option>
-                      </select>
+                      {isLabour ? (
+                        <input value="Labour" disabled className="w-full border border-border rounded-[7px] px-2 py-1.5 text-sm bg-gray-50 text-text-muted" />
+                      ) : (
+                        <select value={item.repair_type} onChange={e => { const n = [...repairItems]; n[i] = { ...n[i], repair_type: e.target.value }; setRepairItems(n); }} className="w-full border border-border rounded-[7px] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                          <option value="">Select...</option>
+                          {FJ_SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                      )}
                     </div>
                     <div>
                       <label className="text-xs text-text-muted mb-1 block">Description</label>
-                      <input type="text" value={item.description} onChange={e => { const n = [...repairItems]; n[i] = { ...n[i], description: e.target.value }; setRepairItems(n); }} disabled={i === repairItems.length - 1} className="w-full border border-border rounded-[7px] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:bg-gray-50" />
+                      <input type="text" value={item.description} onChange={e => { const n = [...repairItems]; n[i] = { ...n[i], description: e.target.value }; setRepairItems(n); }} className="w-full border border-border rounded-[7px] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                     <div className="flex items-end gap-2">
                       <div className="flex-1">
                         <label className="text-xs text-text-muted mb-1 block">Amount (R)</label>
                         <input type="number" value={item.amount} onChange={e => { const n = [...repairItems]; n[i] = { ...n[i], amount: e.target.value }; setRepairItems(n); }} min="0" step="0.01" className="w-full border border-border rounded-[7px] px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" required />
                       </div>
-                      {repairItems.length > 2 && i !== repairItems.length - 1 && (
+                      {!isLabour && repairItems.length > 2 && (
                         <button type="button" onClick={() => setRepairItems(p => p.filter((_, idx) => idx !== i))} className="text-red-500 hover:text-red-700 pb-1">&times;</button>
                       )}
                     </div>
                   </div>
                 </div>
-              ))}
+                );
+              })}
               <div className="text-right font-semibold text-text">Total: R {calcTotal().toFixed(2)}</div>
             </div>
 

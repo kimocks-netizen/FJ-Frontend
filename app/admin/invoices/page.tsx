@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import AdminNavbar from '../../components/AdminNavbar';
@@ -32,6 +32,8 @@ export default function InvoiceManagement() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isConverting, setIsConverting] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
+  const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 10;
   const router = useRouter();
@@ -124,27 +126,18 @@ export default function InvoiceManagement() {
                         </select>
                       ) : <span className="text-text-muted text-xs">N/A</span>}
                     </td>
-                    <td className="px-4 py-3 relative dropdown-container">
-                      <button onClick={() => setDropdownOpen(dropdownOpen === inv.id ? null : inv.id)} className="text-gray-400 hover:text-gray-600 p-1 rounded">
+                    <td className="px-4 py-3 dropdown-container">
+                      <button
+                        ref={el => { btnRefs.current[inv.id] = el; }}
+                        onClick={() => {
+                          if (dropdownOpen === inv.id) { setDropdownOpen(null); return; }
+                          const rect = btnRefs.current[inv.id]?.getBoundingClientRect();
+                          if (rect) setDropdownPos({ top: rect.bottom + window.scrollY + 4, right: window.innerWidth - rect.right });
+                          setDropdownOpen(inv.id);
+                        }}
+                        className="text-gray-400 hover:text-gray-600 p-1 rounded">
                         <FaEllipsisV />
                       </button>
-                      {dropdownOpen === inv.id && (
-                        <div className="absolute right-0 mt-1 w-48 bg-white rounded-[7px] shadow-lg z-50 border border-border py-1">
-                          {[
-                            { icon: <FaEye />, label: 'View PDF', action: () => { setSelectedInvoice(inv); setIsPDFOpen(true); setDropdownOpen(null); } },
-                            { icon: <FaEdit />, label: 'Edit', action: () => { setEditingInvoice(inv); setIsEditModalOpen(true); setDropdownOpen(null); } },
-                            { icon: <FaExchangeAlt />, label: `Convert to ${inv.document_type === 'invoice' ? 'Quote' : 'Invoice'}`, action: () => { setConversionItem({ id: inv.id, currentType: inv.document_type, documentNumber: inv.invoice_number }); setIsConversionModalOpen(true); setDropdownOpen(null); } },
-                            { icon: <FaWhatsapp />, label: 'WhatsApp', action: () => { window.open(`https://wa.me/${inv.customer_phone}`, '_blank'); setDropdownOpen(null); } },
-                          ].map(item => (
-                            <button key={item.label} onClick={item.action} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-text hover:bg-background-section transition-colors">
-                              {item.icon}{item.label}
-                            </button>
-                          ))}
-                          <button onClick={() => { setDeleteItem({ id: inv.id, type: inv.document_type, name: `${inv.document_type === 'invoice' ? 'Invoice' : 'Quote'} ${inv.invoice_number}` }); setIsDeleteModalOpen(true); setDropdownOpen(null); }} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                            <FaTrash />Delete
-                          </button>
-                        </div>
-                      )}
                     </td>
                   </tr>
                 ))}
@@ -167,6 +160,25 @@ export default function InvoiceManagement() {
       {isPDFOpen && selectedInvoice && <InvoicePDF invoice={selectedInvoice} onClose={() => setIsPDFOpen(false)} />}
       {isDeleteModalOpen && deleteItem && <DeleteConfirmationModal isOpen={isDeleteModalOpen} onClose={() => { setIsDeleteModalOpen(false); setDeleteItem(null); }} onConfirm={handleDeleteConfirm} title="Delete Document" message={`Are you sure you want to delete this ${deleteItem.type}?`} itemName={deleteItem.name} isLoading={isDeleting} />}
       {isConversionModalOpen && conversionItem && <ConversionConfirmationModal isOpen={isConversionModalOpen} onClose={() => { setIsConversionModalOpen(false); setConversionItem(null); }} onConfirm={handleConvertConfirm} currentType={conversionItem.currentType} documentNumber={conversionItem.documentNumber} isLoading={isConverting} />}
+
+      {/* Fixed dropdown portal — never clipped by overflow-hidden */}
+      {dropdownOpen && (() => { const inv = invoices.find(i => i.id === dropdownOpen); if (!inv) return null; return (
+        <div className="fixed z-[9999] w-48 bg-white rounded-[7px] shadow-xl border border-border py-1" style={{ top: dropdownPos.top, right: dropdownPos.right }}>
+          {[
+            { icon: <FaEye />, label: 'View PDF', action: () => { setSelectedInvoice(inv); setIsPDFOpen(true); setDropdownOpen(null); } },
+            { icon: <FaEdit />, label: 'Edit', action: () => { setEditingInvoice(inv); setIsEditModalOpen(true); setDropdownOpen(null); } },
+            { icon: <FaExchangeAlt />, label: `Convert to ${inv.document_type === 'invoice' ? 'Quote' : 'Invoice'}`, action: () => { setConversionItem({ id: inv.id, currentType: inv.document_type, documentNumber: inv.invoice_number }); setIsConversionModalOpen(true); setDropdownOpen(null); } },
+            { icon: <FaWhatsapp />, label: 'WhatsApp', action: () => { window.open(`https://wa.me/${inv.customer_phone}`, '_blank'); setDropdownOpen(null); } },
+          ].map(item => (
+            <button key={item.label} onClick={item.action} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-text hover:bg-background-section transition-colors">
+              {item.icon}{item.label}
+            </button>
+          ))}
+          <button onClick={() => { setDeleteItem({ id: inv.id, type: inv.document_type, name: `${inv.document_type === 'invoice' ? 'Invoice' : 'Quote'} ${inv.invoice_number}` }); setIsDeleteModalOpen(true); setDropdownOpen(null); }} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+            <FaTrash /> Delete
+          </button>
+        </div>
+      ); })()}
     </div>
   );
 }

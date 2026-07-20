@@ -30,13 +30,17 @@ const InvoicePDF: React.FC<{ invoice: any; onClose: () => void }> = ({ invoice, 
         <div className="flex-1 overflow-auto p-6">
           <div ref={pdfRef} className="max-w-3xl mx-auto bg-white p-8">
             <div className="text-center border-b-2 border-gray-200 pb-6 mb-6">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="text-primary font-black text-4xl">FJ</span>
-                <span className="text-charcoal font-bold text-lg leading-tight">GENERAL &<br />ENGINEERING SERVICES</span>
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <img src="/big-logo.png" alt="FJ Logo" style={{height:'56px',width:'auto'}} />
+                <div className="text-left leading-tight">
+                  <div style={{color:'#5d9f0d'}} className="font-black text-xl uppercase">FJ General &amp;</div>
+                  <div style={{color:'#ff5a00'}} className="font-black text-xl uppercase">Engineering</div>
+                  <div className="font-black text-xl uppercase text-gray-800">Services</div>
+                </div>
               </div>
               <p className="text-sm text-text-muted">Civil · Landscaping · Engineering Solutions</p>
-              <p className="text-sm text-text-muted mt-1">Tel: +27 00 000 0000 | info@fjengineering.co.za</p>
-              <p className="text-sm text-text-muted">Serving Johannesburg, Ekurhuleni & Pretoria | CIDB Registered | OHS Compliant</p>
+              <p className="text-sm text-text-muted mt-1">Tel: +27 73 786 9066 | vurayiephraim@gmail.com</p>
+              <p className="text-sm text-text-muted">23 Meyer Street, Germiston, 1400 | CIDB Registered | OHS Compliant</p>
             </div>
 
             <div className="grid grid-cols-2 gap-8 mb-6">
