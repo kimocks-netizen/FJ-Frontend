@@ -157,7 +157,7 @@ export default function InvoiceManagement() {
 
       {isNewModalOpen && <NewInvoiceModal isOpen={isNewModalOpen} onClose={() => setIsNewModalOpen(false)} onDocumentCreated={() => { setIsNewModalOpen(false); window.location.reload(); }} setCurrentInvoice={setSelectedInvoice as (inv: unknown) => void} setIsInvoicePDFOpen={setIsPDFOpen} />}
       {isEditModalOpen && editingInvoice && <NewInvoiceModal isOpen={isEditModalOpen} editInvoice={editingInvoice} isEditing onClose={() => { setIsEditModalOpen(false); setEditingInvoice(null); }} onDocumentCreated={() => { setIsEditModalOpen(false); window.location.reload(); }} setCurrentInvoice={setSelectedInvoice as (inv: unknown) => void} setIsInvoicePDFOpen={setIsPDFOpen} />}
-      {isPDFOpen && selectedInvoice && <InvoicePDF invoice={selectedInvoice} onClose={() => setIsPDFOpen(false)} />}
+      {selectedInvoice && isPDFOpen && <InvoicePDF invoice={selectedInvoice} onClose={() => { setIsPDFOpen(false); setSelectedInvoice(null); }} />}
       {isDeleteModalOpen && deleteItem && <DeleteConfirmationModal isOpen={isDeleteModalOpen} onClose={() => { setIsDeleteModalOpen(false); setDeleteItem(null); }} onConfirm={handleDeleteConfirm} title="Delete Document" message={`Are you sure you want to delete this ${deleteItem.type}?`} itemName={deleteItem.name} isLoading={isDeleting} />}
       {isConversionModalOpen && conversionItem && <ConversionConfirmationModal isOpen={isConversionModalOpen} onClose={() => { setIsConversionModalOpen(false); setConversionItem(null); }} onConfirm={handleConvertConfirm} currentType={conversionItem.currentType} documentNumber={conversionItem.documentNumber} isLoading={isConverting} />}
 
@@ -165,7 +165,13 @@ export default function InvoiceManagement() {
       {dropdownOpen && (() => { const inv = invoices.find(i => i.id === dropdownOpen); if (!inv) return null; return (
         <div className="fixed z-[9999] w-48 bg-white rounded-[7px] shadow-xl border border-border py-1" style={{ top: dropdownPos.top, right: dropdownPos.right }}>
           {[
-            { icon: <FaEye />, label: 'View PDF', action: () => { setSelectedInvoice(inv); setIsPDFOpen(true); setDropdownOpen(null); } },
+            { icon: <FaEye />, label: 'View PDF', action: async () => {
+                setDropdownOpen(null);
+                try {
+                  const res = await axios.get(API_ENDPOINTS.getInvoiceEndpoint(inv.id), { headers: { Authorization: `Bearer ${getToken()}` } });
+                  if (res.data.status === 'success') { setSelectedInvoice(res.data.data); setIsPDFOpen(true); }
+                } catch { setSelectedInvoice(inv); setIsPDFOpen(true); }
+              }},
             { icon: <FaEdit />, label: 'Edit', action: () => { setEditingInvoice(inv); setIsEditModalOpen(true); setDropdownOpen(null); } },
             { icon: <FaExchangeAlt />, label: `Convert to ${inv.document_type === 'invoice' ? 'Quote' : 'Invoice'}`, action: () => { setConversionItem({ id: inv.id, currentType: inv.document_type, documentNumber: inv.invoice_number }); setIsConversionModalOpen(true); setDropdownOpen(null); } },
             { icon: <FaWhatsapp />, label: 'WhatsApp', action: () => { window.open(`https://wa.me/${inv.customer_phone}`, '_blank'); setDropdownOpen(null); } },
