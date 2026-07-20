@@ -33,8 +33,7 @@ const InvoicePDF: React.FC<{ invoice: any; onClose: () => void }> = ({ invoice, 
               <div className="flex items-center justify-center gap-3 mb-2">
                 <img src="/big-logo.png" alt="FJ Logo" style={{height:'56px',width:'auto'}} />
                 <div className="text-left leading-tight">
-                  <div style={{color:'#5d9f0d'}} className="font-black text-xl uppercase">FJ General &amp;</div>
-                  <div style={{color:'#ff5a00'}} className="font-black text-xl uppercase">Engineering</div>
+                  <div className="font-black text-xl uppercase"><span style={{color:'#5d9f0d'}}>FJ General &amp; </span><span style={{color:'#ff5a00'}}>Engineering</span></div>
                   <div className="font-black text-xl uppercase text-gray-800">Services</div>
                 </div>
               </div>
