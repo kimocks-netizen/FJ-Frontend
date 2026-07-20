@@ -7,7 +7,6 @@ import NewInvoiceModal from '../../components/NewInvoiceModal';
 import InvoicePDF from '../../components/InvoicePDF';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
-import { mockQuotes } from '../../lib/mockData';
 import type { Quote } from '../../types';
 
 type QuoteStatus = 'Pending' | 'Contacted' | 'Completed';
@@ -20,7 +19,7 @@ const statusColors: Record<QuoteStatus, string> = {
 };
 
 export default function AdminQuotes() {
-  const [quotes, setQuotes] = useState<Quote[]>(mockQuotes);
+  const [quotes, setQuotes] = useState<Quote[]>([]);
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('All');
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);

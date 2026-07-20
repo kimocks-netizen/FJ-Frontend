@@ -7,14 +7,13 @@ import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 import { supabase } from '../../lib/supabaseClient';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
-import { mockServices } from '../../lib/mockData';
 import type { ServiceItem, ServiceFormData } from '../../types/services';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
 
 const MAX_SERVICES = 12;
 
 export default function ServicesEdit() {
-  const [services, setServices] = useState<ServiceItem[]>(mockServices);
+  const [services, setServices] = useState<ServiceItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<ServiceItem | null>(null);

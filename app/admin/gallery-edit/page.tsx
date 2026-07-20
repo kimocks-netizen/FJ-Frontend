@@ -7,14 +7,13 @@ import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 import { supabase } from '../../lib/supabaseClient';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
-import { mockGallery } from '../../lib/mockData';
 import type { GalleryItem, GalleryFormData } from '../../types/gallery';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner } from 'react-icons/fa';
 
 const MAX_ITEMS = 24;
 
 export default function GalleryEdit() {
-  const [items, setItems] = useState<GalleryItem[]>(mockGallery);
+  const [items, setItems] = useState<GalleryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
@@ -49,14 +48,14 @@ export default function GalleryEdit() {
 
   const handleCoverUpload = async (file: File) => {
     setUploadingCover(true);
-    try { setFormData(p => ({ ...p, cover_image_url: '' })); const url = await uploadImage(file, 'fj-images', 'gallery/covers'); setFormData(p => ({ ...p, cover_image_url: url })); }
+    try { setFormData(p => ({ ...p, cover_image_url: '' })); const url = await uploadImage(file, 'fj-gallery', 'covers'); setFormData(p => ({ ...p, cover_image_url: url })); }
     catch (e) { console.error(e); alert('Failed to upload cover image'); }
     finally { setUploadingCover(false); }
   };
 
   const handleExtraUpload = async (file: File) => {
     setUploadingExtra(true);
-    try { const url = await uploadImage(file, 'fj-images', 'gallery/images'); setAdditionalImages(p => [...p, url]); }
+    try { const url = await uploadImage(file, 'fj-gallery', 'images'); setAdditionalImages(p => [...p, url]); }
     catch (e) { console.error(e); alert('Failed to upload image'); }
     finally { setUploadingExtra(false); }
   };
