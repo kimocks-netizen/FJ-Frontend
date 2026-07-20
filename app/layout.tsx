@@ -4,6 +4,7 @@ import { ToastProvider } from './components/ToastContext';
 import FloatingWhatsAppButton from './components/FloatingWhatsAppButton';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://fj-frontend-ebon.vercel.app'),
   title: 'FJ General & Engineering Services',
   description: 'Your One-Stop Team for Tree Felling, Road Works, Tar Resurfacing, Custom Fabrication and Engineering Services across Gauteng.',
   icons: {

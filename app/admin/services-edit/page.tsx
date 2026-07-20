@@ -79,7 +79,7 @@ export default function ServicesEdit() {
   const handleImageUpload = async (file: File) => {
     setUploadingImage(true);
     try {
-      const url = await uploadViaBackend(file, 'services', 'fj-images');
+      const url = await uploadViaBackend(file, 'services', 'fj-gallery');
       setFormData(p => ({ ...p, image_url: url }));
     } catch (e) { console.error(e); alert('Failed to upload image'); }
     finally { setUploadingImage(false); }
