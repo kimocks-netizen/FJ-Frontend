@@ -65,10 +65,12 @@ export default function Gallery() {
         {/* Accent stripe */}
         <div className="h-1 w-full" style={{background:'linear-gradient(90deg,#5d9f0d 0%,#ff5a00 100%)'}} />
 
-        <section className="py-16 bg-background-dark text-white text-center">
-          <div className="max-w-3xl mx-auto px-6">
+        <section className="relative text-white text-center overflow-hidden">
+          <img src="/footer-strip.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 max-w-3xl mx-auto px-6 py-16">
             <h2 className="text-3xl font-black mb-4">Have a Project to Share?</h2>
-            <p className="text-white/70 mb-8">Contact us to get a quote or see more of our work.</p>
+            <p className="text-white/80 mb-8">Contact us to get a quote or see more of our work.</p>
             <div className="flex flex-row gap-3 justify-center">
               <a href="/contact" className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-5 py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
                 Get a Quote

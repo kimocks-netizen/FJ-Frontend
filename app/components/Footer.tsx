@@ -7,12 +7,6 @@ const col2 = ['Sports Court Marking', 'Pothole Filling', 'Wendy Houses', 'Jacket
 
 const Footer = () => (
   <footer style={{ background: '#0d1f0a' }} className="text-white">
-
-    {/* Footer strip image */}
-    <div className="w-full">
-      <img src="/footer-strip.png" alt="" className="w-full h-auto object-cover" />
-    </div>
-
     {/* Main grid */}
     <div className="max-w-[1120px] mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
 
