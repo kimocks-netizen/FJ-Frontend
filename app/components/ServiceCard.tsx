@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Link from 'next/link';
 import { TreePine, Shovel, Construction, PaintRoller, Trophy, AlertTriangle, Home, FlaskConical, Wrench } from 'lucide-react';
 import type { ServiceItem } from '../types/services';
 
@@ -56,9 +57,9 @@ const ServiceCard = ({ service }: { service: ServiceItem }) => {
             {service.image_url && <img src={service.image_url} alt={service.title} className="w-full h-48 object-cover rounded-[7px] mb-4" />}
             <p className="text-text-secondary mb-3">{service.description}</p>
             {service.details && <p className="text-text-secondary text-sm">{service.details}</p>}
-            <button onClick={() => setIsOpen(false)} className="mt-6 w-full bg-accent hover:bg-accent-dark text-white py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200">
+            <Link href="/contact" className="mt-6 w-full bg-accent hover:bg-accent-dark text-white py-2.5 rounded-[7px] font-bold text-xs uppercase tracking-wide transition-colors duration-200 block text-center">
               Get a Quote
-            </button>
+            </Link>
           </div>
         </div>
       )}
