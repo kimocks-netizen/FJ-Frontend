@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
 
   // Helpers
   getQuoteStatusEndpoint:    (id: string) => `${API_BASE_URL}/api/admin/quotes/${id}/status`,
+  getQuoteDeleteEndpoint:    (id: string) => `${API_BASE_URL}/api/admin/quotes/${id}`,
   getInvoiceEndpoint:        (id: string) => `${API_BASE_URL}/api/admin/invoices/${id}`,
   getInvoiceConvertEndpoint: (id: string) => `${API_BASE_URL}/api/admin/invoices/${id}/convert`,
   getInvoiceDeleteEndpoint:  (id: string) => `${API_BASE_URL}/api/admin/invoices/${id}`,
