@@ -20,6 +20,10 @@ interface Invoice {
 
 export default function InvoiceManagement() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filterType, setFilterType] = useState<'all' | 'invoice' | 'quote'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'draft' | 'sent' | 'paid'>('all');
+  const [search, setSearch] = useState('');
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [isPDFOpen, setIsPDFOpen] = useState(false);
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
@@ -36,7 +40,7 @@ export default function InvoiceManagement() {
   const [downloadInvoice, setDownloadInvoice] = useState<Invoice | null>(null);
   const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 10;
+  const perPage = 20;
   const router = useRouter();
 
   const getToken = () => getAdminToken();
@@ -46,7 +50,8 @@ export default function InvoiceManagement() {
     if (!token) { router.push('/admin'); return; }
     axios.get(API_ENDPOINTS.ADMIN_INVOICES, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => setInvoices(res.data.data || []))
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, [router]);
 
   useEffect(() => {
@@ -85,16 +90,36 @@ export default function InvoiceManagement() {
     } catch { console.error('Conversion failed'); } finally { setIsConverting(false); setIsConversionModalOpen(false); setConversionItem(null); }
   };
 
-  const totalPages = Math.ceil(invoices.length / perPage);
-  const paginated = invoices.slice((currentPage - 1) * perPage, currentPage * perPage);
+  const filtered = invoices
+    .filter(inv => filterType === 'all' || inv.document_type === filterType)
+    .filter(inv => filterStatus === 'all' || inv.status === filterStatus)
+    .filter(inv => !search || inv.customer_name.toLowerCase().includes(search.toLowerCase()) || inv.invoice_number.toLowerCase().includes(search.toLowerCase()));
+  const totalPages = Math.ceil(filtered.length / perPage);
+  const paginated = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
 
   return (
     <div className="min-h-screen bg-background-section">
       <AdminNavbar />
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="bg-primary px-6 py-4 text-white rounded-t-[7px] flex justify-between items-center">
-          <h1 className="text-xl font-bold">INVOICE & QUOTE MANAGEMENT</h1>
-          <button onClick={() => setIsNewModalOpen(true)} className="bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors">New Document</button>
+        <div className="bg-primary px-6 py-4 text-white rounded-t-[7px]">
+          <div className="flex justify-between items-center mb-3">
+            <h1 className="text-xl font-bold">INVOICE & QUOTE MANAGEMENT</h1>
+            <button onClick={() => setIsNewModalOpen(true)} className="bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors">New Document</button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <input value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search name or doc #..." className="border border-white/30 bg-white/10 text-white placeholder-white/50 rounded-[7px] px-3 py-1.5 text-sm focus:outline-none flex-1 min-w-[160px]" />
+            <select value={filterType} onChange={e => { setFilterType(e.target.value as typeof filterType); setCurrentPage(1); }} className="border border-white/30 bg-white/10 text-white rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
+              <option value="all" className="text-text">All Types</option>
+              <option value="invoice" className="text-text">Invoice</option>
+              <option value="quote" className="text-text">Quote</option>
+            </select>
+            <select value={filterStatus} onChange={e => { setFilterStatus(e.target.value as typeof filterStatus); setCurrentPage(1); }} className="border border-white/30 bg-white/10 text-white rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
+              <option value="all" className="text-text">All Statuses</option>
+              <option value="draft" className="text-text">Draft</option>
+              <option value="sent" className="text-text">Sent</option>
+              <option value="paid" className="text-text">Paid</option>
+            </select>
+          </div>
         </div>
 
         <div className="bg-white shadow rounded-b-[7px] overflow-hidden border border-border border-t-0">
@@ -108,7 +133,11 @@ export default function InvoiceManagement() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {paginated.map(inv => (
+                {isLoading ? (
+                  <tr><td colSpan={8}><div className="flex justify-center items-center py-12"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div></td></tr>
+                ) : paginated.length === 0 ? (
+                  <tr><td colSpan={8} className="text-center py-8 text-text-muted">No documents found.</td></tr>
+                ) : paginated.map(inv => (
                   <tr key={inv.id} className="hover:bg-background-section transition-colors">
                     <td className="px-4 py-3 text-sm font-medium text-text">{inv.invoice_number}</td>
                     <td className="px-4 py-3">
@@ -144,15 +173,14 @@ export default function InvoiceManagement() {
                     </td>
                   </tr>
                 ))}
-                {paginated.length === 0 && <tr><td colSpan={8} className="text-center py-8 text-text-muted">No documents found.</td></tr>}
               </tbody>
             </table>
           </div>
           <div className="flex justify-between items-center px-4 py-3 border-t border-border bg-background-section text-sm text-text-muted">
-            <span>Page {currentPage} of {totalPages || 1}</span>
+            <span>{filtered.length} result{filtered.length !== 1 ? 's' : ''} · Page {currentPage} of {totalPages || 1}</span>
             <div className="space-x-2">
               <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1.5 border border-border rounded-[7px] bg-white hover:bg-gray-50 disabled:opacity-50">Previous</button>
-              <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1.5 border border-border rounded-[7px] bg-white hover:bg-gray-50 disabled:opacity-50">Next</button>
+              <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage >= totalPages} className="px-3 py-1.5 border border-border rounded-[7px] bg-white hover:bg-gray-50 disabled:opacity-50">Next</button>
             </div>
           </div>
         </div>

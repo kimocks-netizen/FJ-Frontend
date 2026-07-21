@@ -20,6 +20,7 @@ const statusColors: Record<QuoteStatus, string> = {
 
 export default function AdminQuotes() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('All');
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -28,7 +29,7 @@ export default function AdminQuotes() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [currentInvoice, setCurrentInvoice] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 10;
+  const perPage = 20;
   const router = useRouter();
 
   useEffect(() => {
@@ -36,7 +37,8 @@ export default function AdminQuotes() {
     if (!token) { router.push('/admin'); return; }
     axios.get(API_ENDPOINTS.ADMIN_QUOTES, { headers: { Authorization: `Bearer ${token}` } })
       .then(res => { if (res.data.status === 'success') setQuotes(res.data.data.map((q: Quote) => ({ ...q, status: (q.status.charAt(0).toUpperCase() + q.status.slice(1)) as QuoteStatus }))); })
-      .catch(err => { console.error('Quotes fetch error:', err); });
+      .catch(err => { console.error('Quotes fetch error:', err); })
+      .finally(() => setIsLoading(false));
   }, [router]);
 
   const handleStatusChange = async (id: string, status: QuoteStatus) => {
@@ -76,7 +78,11 @@ export default function AdminQuotes() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {paginated.map(q => (
+                {isLoading ? (
+                  <tr><td colSpan={8}><div className="flex justify-center items-center py-12"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div></td></tr>
+                ) : paginated.length === 0 ? (
+                  <tr><td colSpan={8} className="text-center py-8 text-text-muted">No quotes found.</td></tr>
+                ) : paginated.map(q => (
                   <tr key={q.id} className="hover:bg-background-section transition-colors">
                     <td className="px-4 py-3 text-sm font-medium text-text">{q.name}</td>
                     <td className="px-4 py-3 text-sm"><a href={`tel:${q.phone}`} className="text-primary hover:underline">{q.phone}</a></td>
@@ -102,18 +108,15 @@ export default function AdminQuotes() {
                     </td>
                   </tr>
                 ))}
-                {paginated.length === 0 && (
-                  <tr><td colSpan={8} className="text-center py-8 text-text-muted">No quotes found.</td></tr>
-                )}
               </tbody>
             </table>
           </div>
 
           <div className="flex justify-between items-center px-4 py-3 border-t border-border bg-background-section text-sm text-text-muted">
-            <span>Page {currentPage} of {totalPages || 1}</span>
+            <span>{filtered.length} result{filtered.length !== 1 ? 's' : ''} · Page {currentPage} of {totalPages || 1}</span>
             <div className="space-x-2">
               <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1} className="px-3 py-1.5 border border-border rounded-[7px] bg-white hover:bg-gray-50 disabled:opacity-50 transition-colors">Previous</button>
-              <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="px-3 py-1.5 border border-border rounded-[7px] bg-white hover:bg-gray-50 disabled:opacity-50 transition-colors">Next</button>
+              <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage >= totalPages} className="px-3 py-1.5 border border-border rounded-[7px] bg-white hover:bg-gray-50 disabled:opacity-50 transition-colors">Next</button>
             </div>
           </div>
         </div>
