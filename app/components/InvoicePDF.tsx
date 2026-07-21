@@ -4,7 +4,7 @@ import { FaDownload, FaPrint, FaTimes } from 'react-icons/fa';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const PDFBody = ({ invoice, fmt, fmtDate }: { invoice: any; fmt: (n: number) => string; fmtDate: (d: string) => string }) => (
-  <div style={{maxWidth:'720px',background:'#fff',padding:'32px',fontFamily:'Arial,sans-serif',color:'#1a1a1a'}}>
+  <div style={{maxWidth:'720px',background:'#fff',padding:'32px',fontFamily:'Arial,sans-serif',color:'#1a1a1a',textDecoration:'none'}}>
     <div style={{textAlign:'center',borderBottom:'2px solid #e5e7eb',paddingBottom:'24px',marginBottom:'24px'}}>
       <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'12px',marginBottom:'8px'}}>
         <img src="/big-logo.png" alt="FJ Logo" style={{height:'56px',width:'auto'}} />
@@ -16,8 +16,8 @@ const PDFBody = ({ invoice, fmt, fmtDate }: { invoice: any; fmt: (n: number) => 
         </div>
       </div>
       <p style={{fontSize:'13px',color:'#6b7280',margin:'4px 0'}}>Civil · Landscaping · Engineering Solutions</p>
-      <p style={{fontSize:'13px',color:'#6b7280',margin:'4px 0'}}>Tel: +27 73 786 9066 | vurayiephraim@gmail.com</p>
-      <p style={{fontSize:'13px',color:'#6b7280',margin:'4px 0'}}>Bornite Industries, 22 Meyer Street, Germiston, 1400 | CIDB Registered | OHS Compliant</p>
+      <p style={{fontSize:'13px',color:'#6b7280',margin:'4px 0',textDecoration:'none'}}>Tel: +27 73 786 9066 | vurayiephraim@gmail.com</p>
+      <a href="https://maps.app.goo.gl/eV64EgxKA3MNZCs96" target="_blank" rel="noopener noreferrer" style={{fontSize:'13px',color:'#6b7280',margin:'4px 0',textDecoration:'none',display:'block'}}>Bornite Industries, 22 Meyer Street, Germiston, 1400 | CIDB Registered | OHS Compliant</a>
     </div>
 
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'32px',marginBottom:'24px'}}>
