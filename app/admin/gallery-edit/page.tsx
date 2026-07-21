@@ -137,11 +137,15 @@ export default function GalleryEdit() {
     <div className="min-h-screen bg-background-section">
       <AdminNavbar />
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="bg-primary px-6 py-4 text-white rounded-t-[7px] flex justify-between items-center mb-6">
-          <h1 className="text-xl font-bold">GALLERY MANAGEMENT</h1>
-          <button onClick={() => { setEditingItem(null); setFormData({ title: '', description: '', cover_image_url: '' }); setAdditionalImages([]); setIsModalOpen(true); }} disabled={items.length >= MAX_ITEMS} className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-            <FaPlus />New Item
-          </button>
+        <div className="bg-primary px-6 py-4 text-white rounded-t-[7px] mb-6">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-xl font-bold">GALLERY MANAGEMENT</h1>
+            <div className="flex justify-end">
+              <button onClick={() => { setEditingItem(null); setFormData({ title: '', description: '', cover_image_url: '' }); setAdditionalImages([]); setIsModalOpen(true); }} disabled={items.length >= MAX_ITEMS} className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <FaPlus />New Item
+              </button>
+            </div>
+          </div>
         </div>
 
         {items.length >= MAX_ITEMS && <div className="bg-yellow-50 border border-yellow-200 rounded-[7px] p-4 mb-6 text-yellow-800 text-sm">Maximum of {MAX_ITEMS} gallery items reached.</div>}

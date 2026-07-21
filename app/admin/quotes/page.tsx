@@ -97,11 +97,13 @@ export default function AdminQuotes() {
 
         {/* Header */}
         <div className="bg-primary px-6 py-4 text-white rounded-t-[7px]">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-2">
             <h1 className="text-xl font-bold">QUOTE REQUESTS</h1>
-            <button onClick={() => setShowFilters(p => !p)} className={`flex items-center gap-2 px-3 py-2 rounded-[7px] text-sm font-semibold transition-colors ${hasActiveFilters ? 'bg-accent text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}>
-              <FaFilter /> Filters {hasActiveFilters ? '●' : ''}
-            </button>
+            <div className="flex justify-end">
+              <button onClick={() => setShowFilters(p => !p)} className={`flex items-center gap-2 px-3 py-2 rounded-[7px] text-sm font-semibold transition-colors ${hasActiveFilters ? 'bg-accent text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}>
+                <FaFilter /> Filters {hasActiveFilters ? '●' : ''}
+              </button>
+            </div>
           </div>
         </div>
 
