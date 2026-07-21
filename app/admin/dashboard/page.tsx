@@ -52,7 +52,7 @@ export default function AdminDashboard() {
         {/* Welcome */}
         <div className="mb-10">
           <p className="text-accent font-semibold text-sm uppercase tracking-widest mb-1">Admin Portal</p>
-          <h1 className="text-4xl font-black text-text">Welcome back, <span className="text-primary">Admin</span></h1>
+          <h1 className="text-2xl font-black text-text">Welcome back, <span className="text-primary">Admin</span></h1>
           <p className="text-text-secondary mt-2 text-sm">Select a section below to get started.</p>
         </div>
 
