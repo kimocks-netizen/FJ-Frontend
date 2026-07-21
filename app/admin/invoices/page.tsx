@@ -135,27 +135,27 @@ export default function InvoiceManagement() {
               <button onClick={() => setIsNewModalOpen(true)} className="bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors">New Document</button>
             </div>
           </div>
-
-          {/* Collapsible filters */}
-          {showFilters && (
-            <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-2">
-              <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && applyFilters()} placeholder="Search name or doc #..." className="border border-white/30 bg-white/10 text-white placeholder-white/50 rounded-[7px] px-3 py-1.5 text-sm focus:outline-none flex-1 min-w-[160px]" />
-              <select value={filterType} onChange={e => { setFilterType(e.target.value); setCurrentPage(1); }} className="border border-white/30 bg-white/10 text-white rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
-                <option value="" className="text-text">All Types</option>
-                <option value="invoice" className="text-text">Invoice</option>
-                <option value="quote" className="text-text">Quote</option>
-              </select>
-              <select value={filterStatus} onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }} className="border border-white/30 bg-white/10 text-white rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
-                <option value="" className="text-text">All Statuses</option>
-                <option value="draft" className="text-text">Draft</option>
-                <option value="sent" className="text-text">Sent</option>
-                <option value="paid" className="text-text">Paid</option>
-              </select>
-              <button onClick={applyFilters} className="bg-white text-primary px-3 py-1.5 rounded-[7px] text-sm font-semibold hover:bg-white/90 transition-colors">Apply</button>
-              {hasActiveFilters && <button onClick={clearFilters} className="bg-white/10 text-white px-3 py-1.5 rounded-[7px] text-sm hover:bg-white/20 transition-colors">Clear</button>}
-            </div>
-          )}
         </div>
+
+        {/* Collapsible filters — below the green bar */}
+        {showFilters && (
+          <div className="bg-white border border-border border-t-0 px-6 py-3 flex flex-wrap gap-2 items-center">
+            <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && applyFilters()} placeholder="Search name or doc #..." className="border border-border rounded-[7px] px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 flex-1 min-w-[160px]" />
+            <select value={filterType} onChange={e => { setFilterType(e.target.value); setCurrentPage(1); }} className="border border-border rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
+              <option value="">All Types</option>
+              <option value="invoice">Invoice</option>
+              <option value="quote">Quote</option>
+            </select>
+            <select value={filterStatus} onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }} className="border border-border rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
+              <option value="">All Statuses</option>
+              <option value="draft">Draft</option>
+              <option value="sent">Sent</option>
+              <option value="paid">Paid</option>
+            </select>
+            <button onClick={applyFilters} className="bg-primary text-white px-3 py-1.5 rounded-[7px] text-sm font-semibold hover:bg-primary-dark transition-colors">Apply</button>
+            {hasActiveFilters && <button onClick={clearFilters} className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-[7px] text-sm hover:bg-gray-200 transition-colors">Clear</button>}
+          </div>
+        )}
 
         <div className="bg-white shadow rounded-b-[7px] overflow-hidden border border-border border-t-0">
           <div className="overflow-x-auto">

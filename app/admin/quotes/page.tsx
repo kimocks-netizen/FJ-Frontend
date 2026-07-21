@@ -103,21 +103,22 @@ export default function AdminQuotes() {
               <FaFilter /> Filters {hasActiveFilters ? '●' : ''}
             </button>
           </div>
-
-          {showFilters && (
-            <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-2">
-              <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && applyFilters()} placeholder="Search name or phone..." className="border border-white/30 bg-white/10 text-white placeholder-white/50 rounded-[7px] px-3 py-1.5 text-sm focus:outline-none flex-1 min-w-[160px]" />
-              <select value={filterStatus} onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }} className="border border-white/30 bg-white/10 text-white rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
-                <option value="" className="text-text">All Statuses</option>
-                <option value="Pending" className="text-text">Pending</option>
-                <option value="Contacted" className="text-text">Contacted</option>
-                <option value="Completed" className="text-text">Completed</option>
-              </select>
-              <button onClick={applyFilters} className="bg-white text-primary px-3 py-1.5 rounded-[7px] text-sm font-semibold hover:bg-white/90 transition-colors">Apply</button>
-              {hasActiveFilters && <button onClick={clearFilters} className="bg-white/10 text-white px-3 py-1.5 rounded-[7px] text-sm hover:bg-white/20 transition-colors">Clear</button>}
-            </div>
-          )}
         </div>
+
+        {/* Collapsible filters — below the green bar */}
+        {showFilters && (
+          <div className="bg-white border border-border border-t-0 px-6 py-3 flex flex-wrap gap-2 items-center">
+            <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && applyFilters()} placeholder="Search name or phone..." className="border border-border rounded-[7px] px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 flex-1 min-w-[160px]" />
+            <select value={filterStatus} onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }} className="border border-border rounded-[7px] px-3 py-1.5 text-sm focus:outline-none">
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <button onClick={applyFilters} className="bg-primary text-white px-3 py-1.5 rounded-[7px] text-sm font-semibold hover:bg-primary-dark transition-colors">Apply</button>
+            {hasActiveFilters && <button onClick={clearFilters} className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-[7px] text-sm hover:bg-gray-200 transition-colors">Clear</button>}
+          </div>
+        )}
 
         <div className="bg-white shadow rounded-b-[7px] overflow-hidden border border-border border-t-0">
           <div className="overflow-x-auto">
