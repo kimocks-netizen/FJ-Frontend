@@ -126,9 +126,9 @@ export default function InvoiceManagement() {
 
         {/* Header */}
         <div className="bg-primary px-6 py-4 text-white rounded-t-[7px]">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <h1 className="text-xl font-bold">INVOICE & QUOTE MANAGEMENT</h1>
-            <div className="flex gap-2 sm:justify-start justify-end">
+            <div className="flex gap-2 justify-end">
               <button onClick={() => setShowFilters(p => !p)} className={`flex items-center gap-2 px-3 py-2 rounded-[7px] text-sm font-semibold transition-colors ${hasActiveFilters ? 'bg-accent text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}>
                 <FaFilter /> Filters {hasActiveFilters ? '●' : ''}
               </button>

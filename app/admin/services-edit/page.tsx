@@ -7,7 +7,7 @@ import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
 import type { ServiceItem, ServiceFormData } from '../../types/services';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner, FaCloudUploadAlt } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaEyeSlash, FaSpinner, FaCloudUploadAlt, FaLeaf, FaCog } from 'react-icons/fa';
 
 const checkLandscape = (file: File): Promise<boolean> =>
   new Promise(resolve => {
@@ -130,7 +130,7 @@ export default function ServicesEdit() {
       <AdminNavbar />
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-primary px-6 py-4 text-white rounded-t-[7px] mb-6">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <h1 className="text-xl font-bold">SERVICES MANAGEMENT</h1>
             <div className="flex justify-end">
               <button onClick={() => { setEditingService(null); setFormData({ title: '', description: '', image_url: '', details: '', category: 'general' }); setIsModalOpen(true); }} disabled={services.length >= MAX_SERVICES} className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
@@ -188,12 +188,12 @@ export default function ServicesEdit() {
                   <div className="grid grid-cols-2 gap-2">
                     {(['general', 'engineering'] as const).map(cat => (
                       <button key={cat} type="button" onClick={() => setFormData(p => ({ ...p, category: cat }))}
-                        className={`py-2 rounded-[7px] text-sm font-semibold border-2 transition-colors capitalize ${
+                        className={`flex items-center justify-center py-2 rounded-[7px] text-sm font-semibold border-2 transition-colors ${
                           formData.category === cat
                             ? cat === 'general' ? 'bg-primary border-primary text-white' : 'bg-accent border-accent text-white'
                             : 'bg-white border-border text-text-muted hover:border-primary'
                         }`}>
-                        {cat === 'general' ? '🟢 General' : '🟠 Engineering'}
+                        {cat === 'general' ? <><FaLeaf className="mr-1" />General</> : <><FaCog className="mr-1" />Engineering</>}
                       </button>
                     ))}
                   </div>

@@ -1,12 +1,12 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import AdminNavbar from '../../components/AdminNavbar';
 import NewInvoiceModal from '../../components/NewInvoiceModal';
 import InvoicePDF from '../../components/InvoicePDF';
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
-import { FaFilter, FaTrash } from 'react-icons/fa';
+import { FaFilter, FaEllipsisV, FaEye, FaFileInvoice, FaWhatsapp, FaTrash } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
 import type { Quote } from '../../types';
@@ -20,7 +20,7 @@ const statusColors: Record<QuoteStatus, string> = {
 };
 
 const Spinner = () => (
-  <tr><td colSpan={8}>
+  <tr><td colSpan={7}>
     <div className="flex justify-center items-center py-12">
       <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
@@ -47,6 +47,11 @@ export default function AdminQuotes() {
   const [currentInvoice, setCurrentInvoice] = useState<any>(null);
   const [deleteQuote, setDeleteQuote] = useState<Quote | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
+  const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
   const router = useRouter();
 
   const fetchQuotes = useCallback(async (page: number) => {
@@ -67,6 +72,14 @@ export default function AdminQuotes() {
   }, [filterStatus, appliedSearch, router]);
 
   useEffect(() => { fetchQuotes(currentPage); }, [currentPage, fetchQuotes]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownOpen && !(e.target as Element).closest('.dropdown-container') && !(e.target as Element).closest('.dropdown-portal')) setDropdownOpen(null);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [dropdownOpen]);
 
   const applyFilters = () => { setAppliedSearch(search); setCurrentPage(1); };
   const clearFilters = () => { setFilterStatus(''); setSearch(''); setAppliedSearch(''); setCurrentPage(1); };
@@ -97,17 +110,15 @@ export default function AdminQuotes() {
 
         {/* Header */}
         <div className="bg-primary px-6 py-4 text-white rounded-t-[7px]">
-          <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-2">
             <h1 className="text-xl font-bold">QUOTE REQUESTS</h1>
-            <div className="flex justify-end">
-              <button onClick={() => setShowFilters(p => !p)} className={`flex items-center gap-2 px-3 py-2 rounded-[7px] text-sm font-semibold transition-colors ${hasActiveFilters ? 'bg-accent text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}>
-                <FaFilter /> Filters {hasActiveFilters ? '●' : ''}
-              </button>
-            </div>
+            <button onClick={() => setShowFilters(p => !p)} className={`flex items-center gap-2 px-3 py-2 rounded-[7px] text-sm font-semibold transition-colors ${hasActiveFilters ? 'bg-accent text-white' : 'bg-white/10 hover:bg-white/20 text-white'}`}>
+              <FaFilter /> Filters {hasActiveFilters ? '●' : ''}
+            </button>
           </div>
         </div>
 
-        {/* Collapsible filters — below the green bar */}
+        {/* Collapsible filters */}
         {showFilters && (
           <div className="bg-white border border-border border-t-0 px-6 py-3 flex flex-wrap gap-2 items-center">
             <input value={search} onChange={e => setSearch(e.target.value)} onKeyDown={e => e.key === 'Enter' && applyFilters()} placeholder="Search name or phone..." className="border border-border rounded-[7px] px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 flex-1 min-w-[160px]" />
@@ -127,14 +138,14 @@ export default function AdminQuotes() {
             <table className="min-w-full divide-y divide-border">
               <thead className="bg-background-section">
                 <tr>
-                  {['Name', 'Phone', 'Service', 'Location', 'Status', 'Images', 'Invoice', 'Actions'].map(h => (
+                  {['Name', 'Phone', 'Service', 'Location', 'Status', 'Actions'].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {isLoading ? <Spinner /> : quotes.length === 0 ? (
-                  <tr><td colSpan={8} className="text-center py-8 text-text-muted">No quotes found.</td></tr>
+                  <tr><td colSpan={6} className="text-center py-8 text-text-muted">No quotes found.</td></tr>
                 ) : quotes.map(q => (
                   <tr key={q.id} className="hover:bg-background-section transition-colors">
                     <td className="px-4 py-3 text-sm font-medium text-text">{q.name}</td>
@@ -148,19 +159,18 @@ export default function AdminQuotes() {
                         <option value="Completed">Completed</option>
                       </select>
                     </td>
-                    <td className="px-4 py-3 text-sm">
-                      <button onClick={() => { setSelectedQuote(q); setIsImageModalOpen(true); }} className="text-primary hover:underline text-sm">
-                        View ({q.images?.length || 0})
+                    <td className="px-4 py-3 dropdown-container">
+                      <button
+                        ref={el => { btnRefs.current[q.id] = el; }}
+                        onClick={() => {
+                          if (dropdownOpen === q.id) { setDropdownOpen(null); return; }
+                          const rect = btnRefs.current[q.id]?.getBoundingClientRect();
+                          if (rect) setDropdownPos({ top: rect.bottom + window.scrollY + 4, right: window.innerWidth - rect.right });
+                          setDropdownOpen(q.id);
+                        }}
+                        className="text-gray-400 hover:text-gray-600 p-1 rounded-[7px]">
+                        <FaEllipsisV />
                       </button>
-                    </td>
-                    <td className="px-4 py-3 text-sm">
-                      <button onClick={() => { setSelectedQuote(q); setIsInvoiceModalOpen(true); }} className="text-primary hover:underline text-sm">Generate</button>
-                    </td>
-                    <td className="px-4 py-3 text-sm">
-                      <div className="flex items-center gap-3">
-                        <a href={`https://wa.me/${q.phone}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-800 font-medium">WhatsApp</a>
-                        <button onClick={() => setDeleteQuote(q)} className="text-red-500 hover:text-red-700 transition-colors"><FaTrash /></button>
-                      </div>
                     </td>
                   </tr>
                 ))}
@@ -205,6 +215,24 @@ export default function AdminQuotes() {
       )}
       {isPDFOpen && currentInvoice && <InvoicePDF invoice={currentInvoice} onClose={() => setIsPDFOpen(false)} />}
       {deleteQuote && <DeleteConfirmationModal isOpen={!!deleteQuote} onClose={() => setDeleteQuote(null)} onConfirm={handleDeleteConfirm} title="Delete Quote" message="Are you sure you want to delete this quote request?" itemName={deleteQuote.name} isLoading={isDeleting} />}
+
+      {/* Dropdown portal */}
+      {dropdownOpen && (() => { const q = quotes.find(x => x.id === dropdownOpen); if (!q) return null; return (
+        <div className="dropdown-portal fixed z-[9999] w-48 bg-white rounded-[7px] shadow-xl border border-border py-1" style={{ top: dropdownPos.top, right: dropdownPos.right }}>
+          {[
+            { icon: <FaEye />, label: 'View Images', action: () => { setSelectedQuote(q); setIsImageModalOpen(true); setDropdownOpen(null); } },
+            { icon: <FaFileInvoice />, label: 'Generate Invoice', action: () => { setSelectedQuote(q); setIsInvoiceModalOpen(true); setDropdownOpen(null); } },
+            { icon: <FaWhatsapp />, label: 'WhatsApp', action: () => { window.open(`https://wa.me/${q.phone}`, '_blank'); setDropdownOpen(null); } },
+          ].map(item => (
+            <button key={item.label} onClick={item.action} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-text hover:bg-background-section transition-colors">
+              {item.icon}{item.label}
+            </button>
+          ))}
+          <button onClick={() => { setDeleteQuote(q); setDropdownOpen(null); }} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+            <FaTrash /> Delete
+          </button>
+        </div>
+      ); })()}
     </div>
   );
 }
