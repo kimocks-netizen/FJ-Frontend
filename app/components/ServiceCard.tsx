@@ -20,7 +20,7 @@ const SERVICE_MAP: Record<string, { icon: React.ReactNode; color: 'green' | 'ora
 
 const ServiceCard = ({ service }: { service: ServiceItem }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const entry = SERVICE_MAP[service.title] ?? { icon: <Wrench className="w-4 h-4" />, color: 'green' as const };
+  const entry = SERVICE_MAP[service.title] ?? { icon: <Wrench className="w-4 h-4" />, color: (service.category === 'engineering' ? 'orange' : 'green') as 'green' | 'orange' };
   const badgeBg = entry.color === 'orange' ? 'bg-accent' : 'bg-primary';
 
   return (

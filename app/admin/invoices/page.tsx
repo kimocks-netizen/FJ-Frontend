@@ -7,7 +7,7 @@ import NewInvoiceModal from '../../components/NewInvoiceModal';
 import InvoicePDF from '../../components/InvoicePDF';
 import DeleteConfirmationModal from '../../components/DeleteConfirmationModal';
 import ConversionConfirmationModal from '../../components/ConversionConfirmationModal';
-import { FaEllipsisV, FaEye, FaEdit, FaExchangeAlt, FaWhatsapp, FaTrash } from 'react-icons/fa';
+import { FaEllipsisV, FaEye, FaEdit, FaExchangeAlt, FaDownload, FaTrash } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../utils/api';
 import { getAdminToken } from '../../utils/auth';
 
@@ -33,6 +33,7 @@ export default function InvoiceManagement() {
   const [isConverting, setIsConverting] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number }>({ top: 0, right: 0 });
+  const [downloadInvoice, setDownloadInvoice] = useState<Invoice | null>(null);
   const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 10;
@@ -160,6 +161,7 @@ export default function InvoiceManagement() {
       {isNewModalOpen && <NewInvoiceModal isOpen={isNewModalOpen} onClose={() => setIsNewModalOpen(false)} onDocumentCreated={() => { setIsNewModalOpen(false); window.location.reload(); }} setCurrentInvoice={setSelectedInvoice as (inv: unknown) => void} setIsInvoicePDFOpen={setIsPDFOpen} />}
       {isEditModalOpen && editingInvoice && <NewInvoiceModal isOpen={isEditModalOpen} editInvoice={editingInvoice} isEditing onClose={() => { setIsEditModalOpen(false); setEditingInvoice(null); }} onDocumentCreated={() => { setIsEditModalOpen(false); window.location.reload(); }} setCurrentInvoice={setSelectedInvoice as (inv: unknown) => void} setIsInvoicePDFOpen={setIsPDFOpen} />}
       {selectedInvoice && isPDFOpen && <InvoicePDF invoice={selectedInvoice} onClose={() => { setIsPDFOpen(false); setSelectedInvoice(null); }} />}
+      {downloadInvoice && <InvoicePDF invoice={downloadInvoice} autoDownload onClose={() => setDownloadInvoice(null)} />}
       {isDeleteModalOpen && deleteItem && <DeleteConfirmationModal isOpen={isDeleteModalOpen} onClose={() => { setIsDeleteModalOpen(false); setDeleteItem(null); }} onConfirm={handleDeleteConfirm} title="Delete Document" message={`Are you sure you want to delete this ${deleteItem.type}?`} itemName={deleteItem.name} isLoading={isDeleting} />}
       {isConversionModalOpen && conversionItem && <ConversionConfirmationModal isOpen={isConversionModalOpen} onClose={() => { setIsConversionModalOpen(false); setConversionItem(null); }} onConfirm={handleConvertConfirm} currentType={conversionItem.currentType} documentNumber={conversionItem.documentNumber} isLoading={isConverting} />}
 
@@ -170,7 +172,7 @@ export default function InvoiceManagement() {
             { icon: <FaEye />, label: 'View PDF', action: () => { setSelectedInvoice(inv); setDropdownOpen(null); setTimeout(() => setIsPDFOpen(true), 0); } },
             { icon: <FaEdit />, label: 'Edit', action: () => { setEditingInvoice(inv); setIsEditModalOpen(true); setDropdownOpen(null); } },
             { icon: <FaExchangeAlt />, label: `Convert to ${inv.document_type === 'invoice' ? 'Quote' : 'Invoice'}`, action: () => { setConversionItem({ id: inv.id, currentType: inv.document_type, documentNumber: inv.invoice_number }); setIsConversionModalOpen(true); setDropdownOpen(null); } },
-            { icon: <FaWhatsapp />, label: 'WhatsApp', action: () => { window.open(`https://wa.me/${inv.customer_phone}`, '_blank'); setDropdownOpen(null); } },
+            { icon: <FaDownload />, label: 'Download', action: () => { setDropdownOpen(null); setDownloadInvoice(inv); } },
           ].map(item => (
             <button key={item.label} onClick={item.action} className="flex items-center gap-2 w-full px-4 py-2 text-sm text-text hover:bg-background-section transition-colors">
               {item.icon}{item.label}

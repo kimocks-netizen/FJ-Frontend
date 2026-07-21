@@ -7,7 +7,7 @@ const contactDetails = [
   { icon: <FaPhoneAlt className="text-accent" />, label: 'Phone', value: '+27 73 786 9066', href: 'tel:+27737869066' },
   { icon: <FaWhatsapp className="text-accent" />, label: 'WhatsApp', value: '+27 73 786 9066', href: 'https://wa.me/27737869066' },
   { icon: <FaEnvelope className="text-accent" />, label: 'Email', value: 'vurayiephraim@gmail.com', href: 'mailto:vurayiephraim@gmail.com' },
-  { icon: <FaMapMarkerAlt className="text-accent" />, label: 'Address', value: '23 Meyer Street, Germiston, 1400', href: undefined },
+  { icon: <FaMapMarkerAlt className="text-accent" />, label: 'Address', value: 'Bornite Industries, 22 Meyer Street, Germiston, 1400', href: 'https://maps.app.goo.gl/eV64EgxKA3MNZCs96' },
   { icon: <FaMapMarkerAlt className="text-accent" />, label: 'Service Area', value: 'JHB, Alberton, Germiston, Ekurhuleni, Pretoria', href: undefined },
 ];
 

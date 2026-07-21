@@ -22,14 +22,11 @@ const Footer = () => (
         <p className="text-white/50 text-xs leading-relaxed mb-2">
           Trusted civil, landscaping and engineering solutions across Gauteng. CIDB Registered · OHS Compliant.
         </p>
-        <p className="text-white/40 text-[11px] leading-relaxed mb-2">
+        <p className="text-white/40 text-[11px] leading-relaxed mb-4">
           Registered as FJ Engineering<br />
           Reg No: 2026/265021/07
         </p>
-        <p className="text-white/40 text-[11px] mb-5">
-          23 Meyer Street, Germiston, 1400
-        </p>
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-3">
           {[
             { href: 'https://wa.me/27737869066', icon: <FaWhatsapp className="w-4 h-4" /> },
             { href: 'https://facebook.com',      icon: <FaFacebookF className="w-3.5 h-3.5" /> },
@@ -41,6 +38,9 @@ const Footer = () => (
             </a>
           ))}
         </div>
+        <a href="https://maps.app.goo.gl/eV64EgxKA3MNZCs96" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-white/70 text-[11px] hover:text-white transition-colors">
+          <MapPin className="w-3 h-3 text-accent shrink-0" /> Bornite Industries, 22 Meyer Street, Germiston, 1400
+        </a>
       </div>
 
       {/* Services col 1 */}

@@ -4,6 +4,7 @@ export interface ServiceItem {
   description?: string;
   image_url?: string;
   details?: string;
+  category?: 'general' | 'engineering';
   display_order: number;
   is_active: boolean;
   created_at: string;
@@ -15,4 +16,5 @@ export interface ServiceFormData {
   description: string;
   image_url: string;
   details: string;
+  category: 'general' | 'engineering';
 }

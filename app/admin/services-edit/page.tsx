@@ -43,7 +43,7 @@ export default function ServicesEdit() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<ServiceItem | null>(null);
-  const [formData, setFormData] = useState<ServiceFormData>({ title: '', description: '', image_url: '', details: '' });
+  const [formData, setFormData] = useState<ServiceFormData>({ title: '', description: '', image_url: '', details: '', category: 'general' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [togglingService, setTogglingService] = useState<string | null>(null);
@@ -107,7 +107,7 @@ export default function ServicesEdit() {
         const res = await axios.post(API_ENDPOINTS.ADMIN_SERVICES, formData, { headers: { Authorization: `Bearer ${token}` } });
         if (res.data.status === 'success') setServices(prev => [...prev, res.data.data]);
       }
-      setIsModalOpen(false); setEditingService(null); setFormData({ title: '', description: '', image_url: '', details: '' });
+      setIsModalOpen(false); setEditingService(null); setFormData({ title: '', description: '', image_url: '', details: '', category: 'general' });
     } catch (e) { console.error(e); alert('Failed to save service'); }
     finally { setIsSubmitting(false); }
   };
@@ -131,7 +131,7 @@ export default function ServicesEdit() {
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="bg-primary px-6 py-4 text-white rounded-t-[7px] flex justify-between items-center mb-6">
           <h1 className="text-xl font-bold">SERVICES MANAGEMENT</h1>
-          <button onClick={() => { setEditingService(null); setFormData({ title: '', description: '', image_url: '', details: '' }); setIsModalOpen(true); }} disabled={services.length >= MAX_SERVICES} className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          <button onClick={() => { setEditingService(null); setFormData({ title: '', description: '', image_url: '', details: '', category: 'general' }); setIsModalOpen(true); }} disabled={services.length >= MAX_SERVICES} className="flex items-center gap-2 bg-accent hover:bg-accent-dark text-white px-4 py-2 rounded-[7px] text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
             <FaPlus />New Service
           </button>
         </div>
@@ -156,7 +156,7 @@ export default function ServicesEdit() {
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-text-muted">Order: {service.display_order}</span>
                   <div className="flex gap-2">
-                    <button onClick={() => { setEditingService(service); setFormData({ title: service.title, description: service.description || '', image_url: service.image_url || '', details: service.details || '' }); setIsModalOpen(true); }} className="p-2 text-primary hover:bg-background-section rounded-full transition-colors"><FaEdit /></button>
+                    <button onClick={() => { setEditingService(service); setFormData({ title: service.title, description: service.description || '', image_url: service.image_url || '', details: service.details || '', category: service.category || 'general' }); setIsModalOpen(true); }} className="p-2 text-primary hover:bg-background-section rounded-full transition-colors"><FaEdit /></button>
                     <button onClick={() => setDeleteService(service)} className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"><FaTrash /></button>
                   </div>
                 </div>
@@ -178,6 +178,21 @@ export default function ServicesEdit() {
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">Title *</label>
                   <input type="text" value={formData.title} onChange={e => setFormData(p => ({ ...p, title: e.target.value }))} className="w-full border border-border rounded-[7px] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" required />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-text mb-1">Category *</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(['general', 'engineering'] as const).map(cat => (
+                      <button key={cat} type="button" onClick={() => setFormData(p => ({ ...p, category: cat }))}
+                        className={`py-2 rounded-[7px] text-sm font-semibold border-2 transition-colors capitalize ${
+                          formData.category === cat
+                            ? cat === 'general' ? 'bg-primary border-primary text-white' : 'bg-accent border-accent text-white'
+                            : 'bg-white border-border text-text-muted hover:border-primary'
+                        }`}>
+                        {cat === 'general' ? '🟢 General' : '🟠 Engineering'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-text mb-1">Description</label>
