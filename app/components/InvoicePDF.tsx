@@ -16,8 +16,8 @@ const PDFBody = ({ invoice, fmt, fmtDate }: { invoice: any; fmt: (n: number) => 
         </div>
       </div>
       <p style={{fontSize:'13px',color:'#6b7280',margin:'4px 0'}}>Civil · Landscaping · Engineering Solutions</p>
-      <p style={{fontSize:'13px',color:'#6b7280',margin:'4px 0',textDecoration:'none'}}>Tel: +27 73 786 9066 | vurayiephraim@gmail.com</p>
-      <a href="https://maps.app.goo.gl/eV64EgxKA3MNZCs96" target="_blank" rel="noopener noreferrer" style={{fontSize:'13px',color:'#6b7280',margin:'4px 0',textDecoration:'none',display:'block'}}>Bornite Industries, 22 Meyer Street, Germiston, 1400 | CIDB Registered | OHS Compliant</a>
+      <p style={{fontSize:'13px',color:'#6b7280',margin:'4px 0'}}>Tel: <a href="tel:+27737869066" style={{color:'#2563eb',textDecoration:'none'}}>+27 73 786 9066</a> | <a href="mailto:vurayiephraim@gmail.com" style={{color:'#2563eb',textDecoration:'none'}}>vurayiephraim@gmail.com</a></p>
+      <a href="https://maps.app.goo.gl/eV64EgxKA3MNZCs96" target="_blank" rel="noopener noreferrer" style={{fontSize:'13px',color:'#2563eb',margin:'4px 0',textDecoration:'none',display:'block'}}>Bornite Industries, 22 Meyer Street, Germiston, 1400 | CIDB Registered | OHS Compliant</a>
     </div>
 
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'32px',marginBottom:'24px'}}>
