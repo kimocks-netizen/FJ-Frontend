@@ -67,11 +67,19 @@ const NewInvoiceModal: React.FC<Props> = ({ quote, isOpen, onClose, onDocumentCr
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-text mb-1">Document Type</label>
-              <select value={documentType} onChange={e => setDocumentType(e.target.value as 'invoice' | 'quote')} className="w-full border border-border rounded-[7px] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
-                <option value="invoice">Invoice</option>
-                <option value="quote">Quote</option>
-              </select>
+              <label className="block text-sm font-medium text-text mb-2">Document Type</label>
+              <div className="grid grid-cols-2 gap-2">
+                {(['invoice', 'quote'] as const).map(type => (
+                  <button key={type} type="button" onClick={() => setDocumentType(type)}
+                    className={`py-2.5 rounded-[7px] text-sm font-semibold border-2 transition-colors capitalize ${
+                      documentType === type
+                        ? type === 'invoice' ? 'bg-primary border-primary text-white' : 'bg-purple-600 border-purple-600 text-white'
+                        : 'bg-white border-border text-text-muted hover:border-primary'
+                    }`}>
+                    {type === 'invoice' ? 'Invoice' : 'Quote'}
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[['customer_name', 'Customer Name', 'text'], ['customer_phone', 'Phone', 'tel']].map(([name, label, type]) => (
